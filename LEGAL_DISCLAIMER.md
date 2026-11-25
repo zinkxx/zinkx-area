@@ -5,7 +5,7 @@
 **Zinkx Arena**, macOS (Apple Silicon & Intel) için tamamen sıfırdan **SwiftUI ve AppKit** kullanılarak geliştirilmiş bağımsız, açık kaynaklı bir **konsol arayüzü (Frontend / Launcher)** ve yerel medya kütüphanesi düzenleyicisidir.
 
 1. **Telifli İçerik veya Oyun Dosyası Barındırmaz:**
-   - Bu depoda (**`zinkx-area`**) hiçbir ticari oyun dosyası (`ISO`, `ROM`, `PKG`, `EBOOT.BIN`), sistem yazılımı (`PS3UPDAT.PUP`), BIOS dökümü, şifre çözme anahtarı veya telifli görsel/ses materyali **yer almamaktadır**.
+   - Bu depoda (**`zinkx-arena`**) hiçbir ticari oyun dosyası (`ISO`, `ROM`, `PKG`, `EBOOT.BIN`), sistem yazılımı (`PS3UPDAT.PUP`), BIOS dökümü, şifre çözme anahtarı veya telifli görsel/ses materyali **yer almamaktadır**.
    - Uygulama içerisinde hiçbir oyun indirme bağlantısı, sunucusu veya korsan içerik sağlayıcısı bulunmaz.
    - Ekran görüntülerinde ve `--demo` modunda yer alan tüm oyun isimleri (*Cyber Drift: Neon Horizon*, *Aether Chronicles: Odyssey*, *Valkyrie Protocol Zero* vb.) ve kapak görselleri, CoreGraphics ile prosedürel olarak üretilmiş **%100 özgün ve kurgusal (homebrew) vitrin içerikleridir**.
 

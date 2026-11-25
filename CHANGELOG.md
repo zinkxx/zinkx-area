@@ -18,4 +18,4 @@ First public release.
 - `--demo` mode with procedurally generated, copyright-free showcase games and `--export-screenshots`.
 - Universal (Apple Silicon + Intel) release builds via `scripts/package_release.sh` and GitHub Actions.
 
-[2.0.0]: https://github.com/zinkxx/zinkx-area/releases/tag/v2.0.0
+[2.0.0]: https://github.com/zinkxx/zinkx-arena/releases/tag/v2.0.0
