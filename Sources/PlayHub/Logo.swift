@@ -18,8 +18,10 @@ struct HexagonShape: Shape {
         let c = CGPoint(x: rect.midX, y: rect.midY)
         let r = min(rect.width, rect.height) / 2
         let pts = (0..<6).map { i -> CGPoint in
-            let a = (Double(i) * 60 - 90) * .pi / 180
-            return CGPoint(x: c.x + r * cos(a), y: c.y + r * sin(a))
+            let a: CGFloat = (CGFloat(i) * 60 - 90) * .pi / 180
+            let dx: CGFloat = r * cos(a)
+            let dy: CGFloat = r * sin(a)
+            return CGPoint(x: c.x + dx, y: c.y + dy)
         }
         var p = Path()
         let radius = r * corner
@@ -40,8 +42,10 @@ struct HexFacet: Shape {
         let c = CGPoint(x: rect.midX, y: rect.midY)
         let r = min(rect.width, rect.height) / 2
         func pt(_ i: Int) -> CGPoint {
-            let a = (Double(i) * 60 - 90) * .pi / 180
-            return CGPoint(x: c.x + r * cos(a), y: c.y + r * sin(a))
+            let a: CGFloat = (CGFloat(i) * 60 - 90) * .pi / 180
+            let dx: CGFloat = r * cos(a)
+            let dy: CGFloat = r * sin(a)
+            return CGPoint(x: c.x + dx, y: c.y + dy)
         }
         var p = Path()
         p.move(to: c)
