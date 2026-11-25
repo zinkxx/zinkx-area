@@ -7,15 +7,15 @@
 **macOS (Apple Silicon & Intel) için PlayStation 5 Tarzı Tam Ekran Konsol Arayüzü, Kupa Motoru ve Kütüphane Yöneticisi**  
 *Next-Generation Native SwiftUI & AppKit Console Frontend, Trophy Parser, and Smart Controller Suite for macOS*
 
-[![Platform](https://img.shields.io/badge/Platform-macOS%2015%2B%20(Apple%20Silicon%20%26%20Intel)-0070F2?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/zinkxx/zinkx-area)
+[![Platform](https://img.shields.io/badge/Platform-macOS%2015%2B%20(Apple%20Silicon%20%26%20Intel)-0070F2?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/zinkxx/zinkx-arena)
 [![Swift](https://img.shields.io/badge/Swift-5.10%20%2F%206.0-F05138?style=for-the-badge&logo=swift&logoColor=white)](https://swift.org)
 [![UI](https://img.shields.io/badge/UI-SwiftUI%20%2B%20AppKit-5E5CE6?style=for-the-badge)](https://developer.apple.com/xcode/swiftui/)
 [![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
 [![Legal](https://img.shields.io/badge/Policy-Zero%20ROMs%20%7C%20Anti--Piracy-EAB308?style=for-the-badge)](LEGAL_DISCLAIMER.md)
-[![Release](https://img.shields.io/github/v/release/zinkxx/zinkx-area?style=for-the-badge&label=Download&color=06B6D4)](https://github.com/zinkxx/zinkx-area/releases/latest)
-[![Build](https://img.shields.io/github/actions/workflow/status/zinkxx/zinkx-area/build.yml?branch=main&style=for-the-badge&label=Build)](https://github.com/zinkxx/zinkx-area/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/zinkxx/zinkx-arena?style=for-the-badge&label=Download&color=06B6D4)](https://github.com/zinkxx/zinkx-arena/releases/latest)
+[![Build](https://img.shields.io/github/actions/workflow/status/zinkxx/zinkx-arena/build.yml?branch=main&style=for-the-badge&label=Build)](https://github.com/zinkxx/zinkx-arena/actions/workflows/build.yml)
 
-[**⬇️ İndir / Download**](https://github.com/zinkxx/zinkx-area/releases/latest) · [**🇹🇷 Türkçe Dokümantasyon**](#-türkçe-dokümantasyon) · [**📸 Ekran Görüntüleri**](#-ekran-görüntüleri--screenshots) · [**✨ Özellikler**](#-öne-çıkan-özellikler) · [**🚀 Kurulum**](#-kurulum-ve-derleme) · [**🇬🇧 English Documentation**](#-english-documentation) · [**⚖️ Yasal Uyarı**](LEGAL_DISCLAIMER.md)
+[**⬇️ İndir / Download**](https://github.com/zinkxx/zinkx-arena/releases/latest) · [**🇹🇷 Türkçe Dokümantasyon**](#-türkçe-dokümantasyon) · [**📸 Ekran Görüntüleri**](#-ekran-görüntüleri--screenshots) · [**✨ Özellikler**](#-öne-çıkan-özellikler) · [**🚀 Kurulum**](#-kurulum-ve-derleme) · [**🇬🇧 English Documentation**](#-english-documentation) · [**⚖️ Yasal Uyarı**](LEGAL_DISCLAIMER.md)
 
 </div>
 
@@ -113,7 +113,7 @@ Tamamen gamepad ile yönetilebilen çoklu oyuncu profili seçici ve konsol tarz�
 * *(İsteğe bağlı)* Disk içi `.AT3` / `.BIK` medya dönüştürmesi için `ffmpeg` (`brew install ffmpeg`)
 
 #### ⬇️ Hazır Sürümü İndirin (Önerilen)
-1. [Releases](https://github.com/zinkxx/zinkx-area/releases/latest) sayfasından `ZinkxArena-<sürüm>-macOS-universal.zip` dosyasını indirin (Apple Silicon + Intel).
+1. [Releases](https://github.com/zinkxx/zinkx-arena/releases/latest) sayfasından `ZinkxArena-<sürüm>-macOS-universal.zip` dosyasını indirin (Apple Silicon + Intel).
 2. Zip'i açın ve **Zinkx Arena.app**'i **Uygulamalar** klasörüne taşıyın.
 3. Uygulama Apple tarafından noter onaylı (notarized) olmadığı için ilk açılışta macOS uyarı verebilir. Uygulamaya **sağ tıklayıp → Aç** deyin ya da Terminal'de şunu çalıştırın:
    ```bash
@@ -122,8 +122,8 @@ Tamamen gamepad ile yönetilebilen çoklu oyuncu profili seçici ve konsol tarz�
 
 #### 1. Kaynaktan Derleme: Depoyu Klonlayın ve Derleyin
 ```bash
-git clone https://github.com/zinkxx/zinkx-area.git
-cd zinkx-area
+git clone https://github.com/zinkxx/zinkx-arena.git
+cd zinkx-arena
 ./build.sh
 ```
 Derleme tamamlandığında imzalanmış uygulama paketi `build/Zinkx Arena.app` konumunda oluşturulur.
@@ -195,15 +195,15 @@ open "build/Zinkx Arena.app" --args --demo
 
 ### Quick Start (English)
 
-**Download (recommended):** grab `ZinkxArena-<version>-macOS-universal.zip` from [Releases](https://github.com/zinkxx/zinkx-area/releases/latest), unzip it and move **Zinkx Arena.app** to `/Applications`. The app is ad-hoc signed and not notarized, so on first launch right-click → **Open**, or run:
+**Download (recommended):** grab `ZinkxArena-<version>-macOS-universal.zip` from [Releases](https://github.com/zinkxx/zinkx-arena/releases/latest), unzip it and move **Zinkx Arena.app** to `/Applications`. The app is ad-hoc signed and not notarized, so on first launch right-click → **Open**, or run:
 ```bash
 xattr -dr com.apple.quarantine "/Applications/Zinkx Arena.app"
 ```
 
 **Build from source:**
 ```bash
-git clone https://github.com/zinkxx/zinkx-area.git
-cd zinkx-area
+git clone https://github.com/zinkxx/zinkx-arena.git
+cd zinkx-arena
 ./build.sh
 
 # Launch with your local game backups:
