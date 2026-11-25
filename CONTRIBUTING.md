@@ -20,5 +20,8 @@ Requirements: macOS 15+, Xcode Command Line Tools (Swift 6 toolchain, Swift 5 la
 2. Keep changes focused; describe what changed and how you tested it (ideally with a `--demo` screenshot for UI changes).
 3. Make sure `./build.sh` succeeds; the GitHub Actions build must be green.
 
+## Questions / Sorular
+Ask in [Discussions → Q&A](https://github.com/zinkxx/zinkx-arena/discussions/categories/q-a). / Sorularınızı Discussions → Q&A bölümünde sorun.
+
 ## Reporting bugs / Hata bildirimi
 Use the issue templates. Include your macOS version, Mac model (Apple Silicon/Intel), RPCS3 version and controller model.

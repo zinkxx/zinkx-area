@@ -1,5 +1,11 @@
 blank_issues_enabled: false
 contact_links:
+  - name: ❓ Question / Soru
+    url: https://github.com/zinkxx/zinkx-arena/discussions/categories/q-a
+    about: Ask setup and usage questions in Discussions (Q&A).
+  - name: 💡 Idea / Fikir
+    url: https://github.com/zinkxx/zinkx-arena/discussions/categories/ideas
+    about: Share and discuss feature ideas.
   - name: 🔒 Security issue
     url: https://github.com/zinkxx/zinkx-arena/security/advisories/new
     about: Please report security problems privately.
