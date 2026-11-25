@@ -1,0 +1,41 @@
+name: 🐞 Bug report / Hata bildirimi
+description: Something isn't working as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Please don't share ROMs, keys or links to copyrighted content. / Lütfen ROM, anahtar veya telifli içerik linki paylaşmayın."
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / Ne oldu?
+      description: Steps to reproduce and what you expected instead.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Zinkx Arena version
+      placeholder: "2.0.0"
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version & Mac model
+      placeholder: "macOS 15.5, MacBook Pro M3"
+    validations:
+      required: true
+  - type: input
+    id: rpcs3
+    attributes:
+      label: RPCS3 version
+  - type: dropdown
+    id: controller
+    attributes:
+      label: Controller / Kontrolcü
+      options: [DualSense, DualShock 4, Xbox, Keyboard only, Other]
+  - type: textarea
+    id: logs
+    attributes:
+      label: Screenshots or logs

@@ -12,10 +12,18 @@
 [![UI](https://img.shields.io/badge/UI-SwiftUI%20%2B%20AppKit-5E5CE6?style=for-the-badge)](https://developer.apple.com/xcode/swiftui/)
 [![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
 [![Legal](https://img.shields.io/badge/Policy-Zero%20ROMs%20%7C%20Anti--Piracy-EAB308?style=for-the-badge)](LEGAL_DISCLAIMER.md)
+[![Release](https://img.shields.io/github/v/release/zinkxx/zinkx-area?style=for-the-badge&label=Download&color=06B6D4)](https://github.com/zinkxx/zinkx-area/releases/latest)
+[![Build](https://img.shields.io/github/actions/workflow/status/zinkxx/zinkx-area/build.yml?branch=main&style=for-the-badge&label=Build)](https://github.com/zinkxx/zinkx-area/actions/workflows/build.yml)
 
-[**🇹🇷 Türkçe Dokümantasyon**](#-türkçe-dokümantasyon) · [**📸 Ekran Görüntüleri**](#-ekran-görüntüleri--screenshots) · [**✨ Özellikler**](#-öne-çıkan-özellikler) · [**🚀 Kurulum**](#-kurulum-ve-derleme) · [**🇬🇧 English Documentation**](#-english-documentation) · [**⚖️ Yasal Uyarı**](LEGAL_DISCLAIMER.md)
+[**⬇️ İndir / Download**](https://github.com/zinkxx/zinkx-area/releases/latest) · [**🇹🇷 Türkçe Dokümantasyon**](#-türkçe-dokümantasyon) · [**📸 Ekran Görüntüleri**](#-ekran-görüntüleri--screenshots) · [**✨ Özellikler**](#-öne-çıkan-özellikler) · [**🚀 Kurulum**](#-kurulum-ve-derleme) · [**🇬🇧 English Documentation**](#-english-documentation) · [**⚖️ Yasal Uyarı**](LEGAL_DISCLAIMER.md)
 
 </div>
+
+## 🎬 Demo
+
+https://github.com/user-attachments/assets/23d4c077-5aa3-41d9-a690-d7ef1bdaa6a5
+
+> 🌐 Arayüz şu an Türkçe; **İngilizce dil desteği yolda.** · *The UI is currently in Turkish; **English localization is on the way.***
 
 ---
 
@@ -104,7 +112,15 @@ Tamamen gamepad ile yönetilebilen çoklu oyuncu profili seçici ve konsol tarz�
 * *(İsteğe bağlı)* Yasal oyun yedeklerinizi çalıştırmak için `/Applications/RPCS3.app`
 * *(İsteğe bağlı)* Disk içi `.AT3` / `.BIK` medya dönüştürmesi için `ffmpeg` (`brew install ffmpeg`)
 
-#### 1. Depoyu Klonlayın ve Derleyin
+#### ⬇️ Hazır Sürümü İndirin (Önerilen)
+1. [Releases](https://github.com/zinkxx/zinkx-area/releases/latest) sayfasından `ZinkxArena-<sürüm>-macOS-universal.zip` dosyasını indirin (Apple Silicon + Intel).
+2. Zip'i açın ve **Zinkx Arena.app**'i **Uygulamalar** klasörüne taşıyın.
+3. Uygulama Apple tarafından noter onaylı (notarized) olmadığı için ilk açılışta macOS uyarı verebilir. Uygulamaya **sağ tıklayıp → Aç** deyin ya da Terminal'de şunu çalıştırın:
+   ```bash
+   xattr -dr com.apple.quarantine "/Applications/Zinkx Arena.app"
+   ```
+
+#### 1. Kaynaktan Derleme: Depoyu Klonlayın ve Derleyin
 ```bash
 git clone https://github.com/zinkxx/zinkx-area.git
 cd zinkx-area
@@ -178,6 +194,13 @@ open "build/Zinkx Arena.app" --args --demo
 * **100% DMCA & Copyright Safe**: Includes a procedural `--demo` and `--export-screenshots` engine (`DemoShowcase.swift`) that generates original fictional homebrew titles and vector cover art—no copyrighted assets, ROMs, BIOS, or keys are ever stored or linked.
 
 ### Quick Start (English)
+
+**Download (recommended):** grab `ZinkxArena-<version>-macOS-universal.zip` from [Releases](https://github.com/zinkxx/zinkx-area/releases/latest), unzip it and move **Zinkx Arena.app** to `/Applications`. The app is ad-hoc signed and not notarized, so on first launch right-click → **Open**, or run:
+```bash
+xattr -dr com.apple.quarantine "/Applications/Zinkx Arena.app"
+```
+
+**Build from source:**
 ```bash
 git clone https://github.com/zinkxx/zinkx-area.git
 cd zinkx-area
@@ -194,4 +217,4 @@ open "build/Zinkx Arena.app" --args --demo
 
 ## 📄 Lisans / License
 
-Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır. Hukuki bilgilendirme, ticari marka beyanı ve korsan karşıtı kullanım politikası için [LEGAL_DISCLAIMER.md](LEGAL_DISCLAIMER.md) dosyasını inceleyebilirsiniz.
+Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır. Sürüm notları: [CHANGELOG.md](CHANGELOG.md) · Katkı rehberi: [CONTRIBUTING.md](CONTRIBUTING.md) · Güvenlik: [SECURITY.md](SECURITY.md). Hukuki bilgilendirme, ticari marka beyanı ve korsan karşıtı kullanım politikası için [LEGAL_DISCLAIMER.md](LEGAL_DISCLAIMER.md) dosyasını inceleyebilirsiniz.

@@ -16,3 +16,6 @@ xcuserdata/
 *.log
 *.buf
 /tmp/
+
+# Release packages
+dist/
