@@ -421,6 +421,68 @@ enum DemoShowcase {
             library: library, details: details, settings: settings, input: input, launcher: launcher
         )
         renderSwiftUIView(loginScreen, size: CGSize(width: 1920, height: 1080), to: outDir.appendingPathComponent("06-user-login.png"))
+
+        // 7. New-player sign-up wizard, review step (1920x1080)
+        let editor = ProfileEditorController()
+        editor.loadForNewUser(from: settings)
+        editor.displayName = "Nova"
+        editor.gamertag = "nova"
+        editor.avatar = .bolt
+        editor.accentChoice = .purple
+        editor.genre = LKey("Yarış")
+        editor.wizardStep = .review
+        let wizard = NewUserWizardView(editor: editor, onClose: {})
+            .environmentObject(settings)
+            .preferredColorScheme(.dark)
+        renderSwiftUIView(wizard, size: CGSize(width: 1920, height: 1080), to: outDir.appendingPathComponent("07-new-player.png"))
+
+        // 8. The home screen in four UI languages as a labeled 2×2 collage (1920x1080)
+        let originalLanguage = settings.language
+        var tiles: [(NSImage, String)] = []
+        for lang in [AppLanguage.tr, .en, .de, .ja] {
+            settings.language = lang
+            let tmp = FileManager.default.temporaryDirectory.appendingPathComponent("zinkx-lang-\(lang.rawValue).png")
+            let home = makeHostedHome(
+                HomeView(initialTab: .games, initialSelectedID: firstGame?.id, initialShowingUserSelect: false, initialIntroVisible: false),
+                library: library, details: details, settings: settings, input: input, launcher: launcher
+            )
+            renderSwiftUIView(home, size: CGSize(width: 1920, height: 1080), to: tmp)
+            if let img = NSImage(contentsOf: tmp) { tiles.append((img, lang.title)) }
+            try? FileManager.default.removeItem(at: tmp)
+        }
+        settings.language = originalLanguage
+        savePNG(languageCollage(tiles), to: outDir.appendingPathComponent("08-languages.png"))
+    }
+
+    private static func languageCollage(_ tiles: [(NSImage, String)]) -> NSImage {
+        let size = NSSize(width: 1920, height: 1080)
+        let gap: CGFloat = 12
+        let tileW = (size.width - gap * 3) / 2, tileH = (size.height - gap * 3) / 2
+        let out = NSImage(size: size)
+        out.lockFocus()
+        NSColor(red: 0.03, green: 0.05, blue: 0.12, alpha: 1).setFill()
+        NSRect(origin: .zero, size: size).fill()
+        for (i, (img, label)) in tiles.prefix(4).enumerated() {
+            let col = CGFloat(i % 2), row = CGFloat(1 - i / 2)
+            let rect = NSRect(x: gap + col * (tileW + gap), y: gap + row * (tileH + gap), width: tileW, height: tileH)
+            NSGraphicsContext.saveGraphicsState()
+            NSBezierPath(roundedRect: rect, xRadius: 14, yRadius: 14).addClip()
+            img.draw(in: rect)
+            NSGraphicsContext.restoreGraphicsState()
+
+            let attrs: [NSAttributedString.Key: Any] = [
+                .font: NSFont.systemFont(ofSize: 26, weight: .bold),
+                .foregroundColor: NSColor.white,
+            ]
+            let text = NSAttributedString(string: label, attributes: attrs)
+            let ts = text.size()
+            let pill = NSRect(x: rect.maxX - ts.width - 44, y: rect.minY + 18, width: ts.width + 28, height: ts.height + 12)
+            NSColor(white: 0, alpha: 0.72).setFill()
+            NSBezierPath(roundedRect: pill, xRadius: pill.height / 2, yRadius: pill.height / 2).fill()
+            text.draw(at: NSPoint(x: pill.minX + 14, y: pill.minY + 6))
+        }
+        out.unlockFocus()
+        return out
     }
 
     @MainActor

@@ -12,10 +12,11 @@
 [![UI](https://img.shields.io/badge/UI-SwiftUI%20%2B%20AppKit-5E5CE6?style=for-the-badge)](https://developer.apple.com/xcode/swiftui/)
 [![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
 [![Legal](https://img.shields.io/badge/Policy-Zero%20ROMs%20%7C%20Anti--Piracy-EAB308?style=for-the-badge)](LEGAL_DISCLAIMER.md)
+[![Languages](https://img.shields.io/badge/Languages-8-8B5CF6?style=for-the-badge&logo=googletranslate&logoColor=white)](#-v21de-neler-yeni--whats-new-in-21)
 [![Release](https://img.shields.io/github/v/release/zinkxx/zinkx-arena?style=for-the-badge&label=Download&color=06B6D4)](https://github.com/zinkxx/zinkx-arena/releases/latest)
 [![Build](https://img.shields.io/github/actions/workflow/status/zinkxx/zinkx-arena/build.yml?branch=main&style=for-the-badge&label=Build)](https://github.com/zinkxx/zinkx-arena/actions/workflows/build.yml)
 
-[**⬇️ İndir / Download**](https://github.com/zinkxx/zinkx-arena/releases/latest) · [**🇹🇷 Türkçe Dokümantasyon**](#-türkçe-dokümantasyon) · [**📸 Ekran Görüntüleri**](#-ekran-görüntüleri--screenshots) · [**✨ Özellikler**](#-öne-çıkan-özellikler) · [**🚀 Kurulum**](#-kurulum-ve-derleme) · [**🇬🇧 English Documentation**](#-english-documentation) · [**⚖️ Yasal Uyarı**](LEGAL_DISCLAIMER.md)
+[**⬇️ İndir / Download**](https://github.com/zinkxx/zinkx-arena/releases/latest) · [**🆕 v2.1'de Yeni**](#-v21de-neler-yeni--whats-new-in-21) · [**🇹🇷 Türkçe Dokümantasyon**](#-türkçe-dokümantasyon) · [**📸 Ekran Görüntüleri**](#-ekran-görüntüleri--screenshots) · [**✨ Özellikler**](#-öne-çıkan-özellikler) · [**🚀 Kurulum**](#-kurulum-ve-derleme) · [**🇬🇧 English Documentation**](#-english-documentation) · [**⚖️ Yasal Uyarı**](LEGAL_DISCLAIMER.md)
 
 </div>
 
@@ -23,7 +24,62 @@
 
 https://github.com/user-attachments/assets/23d4c077-5aa3-41d9-a690-d7ef1bdaa6a5
 
-> 🌐 Arayüz dilleri: **Türkçe, English, Deutsch, Français, Español, 日本語, 简体中文, 한국어** — varsayılan olarak sistem dili kullanılır, **Ayarlar → Görünüm → Dil** ile anında değiştirilebilir. · *UI languages: Turkish, English, German, French, Spanish, Japanese, Simplified Chinese and Korean — follows the system language by default and can be switched instantly in **Settings → Appearance → Language**.*
+## 🆕 v2.1'de Neler Yeni? / What's New in 2.1
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🌐 8 Dilde Arayüz
+**Türkçe · English · Deutsch · Français · Español · 日本語 · 简体中文 · 한국어**
+
+Uygulama varsayılan olarak macOS dilini kullanır. **Ayarlar → Görünüm → Dil** bölümünden yeniden başlatmadan anında değiştirilebilir. Tarihler, sayılar, dosya boyutları ve ekran klavyesi düzeni (QWERTZ, AZERTY…) de seçilen dile uyum sağlar.
+
+<sub>*8 UI languages. Follows macOS by default and switches live, with locale-aware dates, numbers and keyboard layouts.*</sub>
+
+</td>
+<td width="50%" valign="top">
+
+### 👤 Yeni Oyuncu Kayıt Sihirbazı
+Yeni bir oyuncu, tam ekran ve adım adım ilerleyen bir kayıt akışıyla eklenir:
+
+**Ad → Kullanıcı adı → Avatar → Renk → Favori tür → Özet**
+
+Gezinme kontrolcüyle yapılır: `R1` ileri, `○` geri. Seçilen renk, profilin tema rengi olur.
+
+<sub>*A full-screen, step-by-step sign-up flow for new players.*</sub>
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🚀 Oyun Sırasında Sıfır Arka Plan Yükü
+Oyun açıkken konsol arayüzü kendini tamamen uykuya alır. Daha önce M1 üzerinde yaklaşık **%40 çekirdek** harcıyordu. Disk medya dönüştürmeleri de oyun boyunca duraklatılır. Böylece işlemci gücünün tamamı RPCS3'e kalır.
+
+<sub>*The hidden UI no longer competes with RPCS3 for CPU while you play.*</sub>
+
+</td>
+<td width="50%" valign="top">
+
+### 🖼️ Retina'da Keskin Görüntü
+RPCS3 çıktısı artık **FidelityFX Super Resolution (FSR)** ile ölçekleniyor ve **16x anizotropik filtreleme** açık. Oyunun detay ekranından 1080p profilini seçerek en net görüntüyü alabilirsin.
+
+<sub>*FSR upscaling and 16x AF. On an M1 MacBook Air, a racing title ran at 55–60 fps with the 1080p profile.*</sub>
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top">
+
+### ✨ Daha Temiz Açılış
+Açılış animasyonu her seferinde sonuna kadar oynar. Ardından gelen **"Kim oynuyor?"** ekranında bir profil seçmek zorunludur. Ana ekran bu ekranın arkasından görünmez ve seçimden sonra ekran tekrar açılmaz. · <sub>*The boot intro plays through and the user picker is mandatory and opaque.*</sub>
+
+</td>
+</tr>
+</table>
+
+> 📋 Tüm değişiklikler / Full list: [CHANGELOG.md](CHANGELOG.md) · [v2.1.0 sürümü / release](https://github.com/zinkxx/zinkx-arena/releases/tag/v2.1.0)
 
 ---
 
@@ -74,10 +130,24 @@ Oyun kumandasındaki **Options / Menü** tuşuyla açılan PS5 tarzı alt hızl�
 
 ---
 
-### 6. "Kim Oynuyor?" Çoklu Kullanıcı Girişi ve Kontrolcü Ekran Klavyesi
-Tamamen gamepad ile yönetilebilen çoklu oyuncu profili seçici ve konsol tarzı sanal ekran klavyesi (`On-Screen Keyboard`).
+### 6. "Kim Oynuyor?" Çoklu Kullanıcı Girişi
+Açılış animasyonundan sonra gelen, tamamen gamepad ile yönetilen profil seçici. Açılışta bir profil seçmek zorunludur.
 
 ![Çoklu Kullanıcı Girişi](docs/screenshots/06-user-login.png)
+
+---
+
+### 7. 🆕 Yeni Oyuncu Kayıt Sihirbazı (New-Player Sign-Up)
+Altı adımlı tam ekran kayıt akışı: ad, kullanıcı adı, avatar, renk, favori tür ve özet kartı. Metinler konsol tarzı ekran klavyesiyle (`On-Screen Keyboard`) girilir.
+
+![Yeni Oyuncu Kayıt Sihirbazı](docs/screenshots/07-new-player.png)
+
+---
+
+### 8. 🆕 8 Dilde Arayüz (Localized UI)
+Aynı ana ekranın Türkçe, İngilizce, Almanca ve Japonca hali. Tarih, süre ve boyut biçimleri de dile göre değişir.
+
+![8 Dilde Arayüz](docs/screenshots/08-languages.png)
 
 ---
 
@@ -89,6 +159,11 @@ Tamamen gamepad ile yönetilebilen çoklu oyuncu profili seçici ve konsol tarz�
   * DualShock 4, DualSense ve Xbox kontrolcüleriyle sıfır gecikmeli menü gezintisi.
   * **Akıllı Işık Çubuğu (Smart Lightbar / Ambilight)**: Seçili oyunun kapak görselinden baskın renk paletini gerçek zamanlı örnekleyerek DualShock 4 / DualSense LED ışık çubuğuna yansıtır. Ayrıca *Tema Rengi*, *Polis Sireni* ve *Altın Kupa* ışık efektleri içerir.
   * **Oyun İçi Çakışma Koruması**: Emülatör başladığında arka plan USB HID pil ve LED sorgularını otomatik askıya alarak USB-C çoklayıcılarda yaşanan kontrolcü/ses kopmalarını önler.
+* **🌐 8 Dil Desteği**
+  * Türkçe, İngilizce, Almanca, Fransızca, İspanyolca, Japonca, Basitleştirilmiş Çince ve Korece. Varsayılan olarak sistem dili kullanılır; **Ayarlar → Görünüm → Dil** ile anında değiştirilir.
+  * Tarih, göreli zaman, oynama süresi, yüzde ve dosya boyutları seçilen dile göre biçimlenir. Ekran klavyesi dile uygun düzene geçer (Almanca QWERTZ, Fransızca AZERTY, İspanyolca ñ).
+* **👤 Çoklu Oyuncu Profilleri ve Kayıt Sihirbazı**
+  * Açılışta zorunlu **"Kim oynuyor?"** seçimi vardır. Yeni oyuncular tam ekran, adım adım bir kayıt akışıyla eklenir: ad, kullanıcı adı, avatar, renk, favori tür.
 * **🏆 Yerel `TROPHY.TRP` ve `TROPUSR.DAT` İkili Kupa Motoru**
   * Oyun klasöründeki `TROPHY.TRP` arşivlerini ve `TROPUSR.DAT` durum tablolarını doğrudan Swift ile byte düzeyinde ayrıştırır (`0xDCA24D00` ve `0x818F54AD` big-endian tabloları).
   * Kupa ikonlarını (`TROP000.PNG`..), kupa açıklamalarını (`TROPCONF.SFM`) ve kilit açılma zaman damgalarını otomatik çıkarır.
@@ -99,6 +174,9 @@ Tamamen gamepad ile yönetilebilen çoklu oyuncu profili seçici ve konsol tarz�
   * Tek tuşla (`⌘E`, üst çubuk ekran hapı veya Kontrol Merkezi) hem **Zinkx Arena** arayüzünü hem de RPCS3 tam ekran hedef monitörünü (`CurrentSettings.ini` -> `[GSFrame]`) harici monitör ile MacBook ekranı arasında taşır.
 * **⚙️ Oyun Bazlı Performans Profilleri (`custom_configs`)**
   * Her oyun için ayrı çözünürlük ölçeği (`540p %75`, `720p %100`, `1080p %150`, `1440p %200`), kare hızı sınırı (`30 FPS`, `60 FPS`, `Otomatik`) ve Shader derleyici modu (`Async Multi-threaded` / `Legacy`) yapılandırması üretir.
+  * Retina ekranlar için çıktı **FSR** ile ölçeklenir ve **16x anizotropik filtreleme** açıktır.
+* **🚀 Oyun Sırasında Sıfır Arka Plan Yükü**
+  * RPCS3 öndeyken arayüz çizimi, animasyonlar ve `ffmpeg` medya dönüştürmeleri tamamen durdurulur. İşlemcinin tamamı emülatöre kalır.
 * **🧪 Dahili Demo Vitrin Modu (`--demo`)**
   * Bilgisayarında henüz oyun yedeği bulunmayan geliştiriciler ve kullanıcılar, `--demo` bayrağıyla tamamen prosedürel üretilmiş 6 kurgusal oyun, kupa seti ve aktivite verisiyle tüm konsol arayüzünü deneyimleyebilir.
 
@@ -162,7 +240,11 @@ open "build/Zinkx Arena.app" --args --demo
 | `Sources/PlayHub/SmartControllerAndOverlay.swift` | DualShock 4 / DualSense Ambilight LED yöneticisi, oyun bazlı performans profili üreticisi ve oyun içi hızlı menü |
 | `Sources/PlayHub/ConsoleFeatures.swift` | PS5 tarzı bildirim tostları (`PS5ToastOverlay`), Kupa Odası (`TrophyRoomView`) ve alt Kontrol Merkezi (`ControlCenterDock`) |
 | `Sources/PlayHub/UsersAndWrapUp.swift` | 7 günlük aktivite grafiği, oyuncu rozetleri ve "Kim Oynuyor?" çoklu profil ekranı |
-| `Sources/PlayHub/OnScreenKeyboard.swift` | Kontrolcüyle yönetilen profil düzenleyici ve konsol ekran klavyesi |
+| `Sources/PlayHub/OnScreenKeyboard.swift` | Kontrolcüyle yönetilen profil düzenleyici, kayıt sihirbazı mantığı ve konsol ekran klavyesi |
+| `Sources/PlayHub/NewUserWizard.swift` | Tam ekran, adım adım yeni oyuncu kayıt sihirbazı |
+| `Sources/PlayHub/L10n.swift` | Yerelleştirme motoru: dil seçimi, çeviri tabloları ve dile duyarlı biçimlendirme |
+| `Resources/<dil>.lproj/Localizable.strings` | 7 dilin çeviri dosyaları (Türkçe kaynak dildir) |
+| `scripts/l10n_check.py` | Çeviri dosyalarında eksik, fazla veya bozuk anahtarları bulan denetleyici |
 | `Sources/PlayHub/DemoShowcase.swift` | Telifsiz kurgusal vitrin oyunları, prosedürel kapak çizici ve otomatik ekran görüntüsü üreticisi (`--export-screenshots`) |
 
 ---
@@ -191,6 +273,9 @@ open "build/Zinkx Arena.app" --args --demo
 * **Borderless Instant Fullscreen Architecture**: Custom `ConsoleWindow: NSWindow` avoids SwiftUI window constraint loops and supports seamless multi-display switching (`⌘E`).
 * **Binary `PARAM.SFO`, `TROPHY.TRP` & `TROPUSR.DAT` Parsers**: Built-in big-endian binary parsers unpack trophy icons, localized XML metadata, unlock timestamps, and save-data headers directly from your legally dumped game folders.
 * **Smart Controller Lightbar & USB HID Guard**: Extracts vibrant cover colors for Ambilight controller LEDs and automatically suspends background `GCController` XPC polling while a game is running so RPCS3 retains exclusive, uninterrupted USB HID access.
+* **8 UI Languages**: Turkish, English, German, French, Spanish, Japanese, Simplified Chinese and Korean. The app follows macOS by default and switches live in *Settings → Appearance → Language*, with locale-aware dates, numbers and on-screen keyboard layouts.
+* **Multi-User Profiles & Sign-Up Wizard**: a mandatory "Who's playing?" picker at startup, plus a full-screen, step-by-step flow for new players (name, gamer tag, avatar, color, genre).
+* **Out of the Way While You Play**: the hidden UI, its animations and `ffmpeg` media conversions are paused while RPCS3 runs. RPCS3 output is upscaled with FSR and 16x anisotropic filtering is on, for a sharp Retina picture.
 * **100% DMCA & Copyright Safe**: Includes a procedural `--demo` and `--export-screenshots` engine (`DemoShowcase.swift`) that generates original fictional homebrew titles and vector cover art—no copyrighted assets, ROMs, BIOS, or keys are ever stored or linked.
 
 ### Quick Start (English)
