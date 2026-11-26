@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-11-26
+
 ### Added
 - UI localization: English, German, French, Spanish, Japanese, Simplified Chinese and Korean alongside Turkish. The language follows macOS by default and can be changed live in Settings → Appearance → Language.
 - Dates, relative times, play time, percentages and file sizes are formatted for the selected language.
@@ -35,4 +37,6 @@ First public release.
 - `--demo` mode with procedurally generated, copyright-free showcase games and `--export-screenshots`.
 - Universal (Apple Silicon + Intel) release builds via `scripts/package_release.sh` and GitHub Actions.
 
+[Unreleased]: https://github.com/zinkxx/zinkx-arena/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/zinkxx/zinkx-arena/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/zinkxx/zinkx-arena/releases/tag/v2.0.0
