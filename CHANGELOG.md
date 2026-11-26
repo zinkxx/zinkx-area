@@ -11,6 +11,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Dates, relative times, play time, percentages and file sizes are formatted for the selected language.
 - The on-screen keyboard uses a matching layout for German (QWERTZ), French (AZERTY), Spanish and English.
 - `scripts/l10n_check.py` checks every translation file for missing, unused or broken entries.
+- New-player sign-up is a full-screen, step-by-step flow: name, gamer tag (suggested from the name), avatar, color, optional favorite genre, then a review card. The chosen color becomes the new account's accent.
 
 ### Changed
 - The profile screen's action buttons are stacked in one column so longer translations fit.

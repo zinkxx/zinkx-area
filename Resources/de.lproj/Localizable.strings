@@ -406,3 +406,25 @@
 "Yeni Oyuncu Profili" = "Neues Spielerprofil";
 "◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil   ○ Kapat" = "◀ ▶ Spieler wählen   ✕ Anmelden   □ Benutzer löschen   ○ Schließen";
 "◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil" = "◀ ▶ Spieler wählen   ✕ Anmelden   □ Benutzer löschen";
+
+/* New-player sign-up wizard */
+"Yeni Oyuncu" = "Neuer Spieler";
+"Adım %@ / %@" = "Schritt %@ von %@";
+"Sana nasıl seslenelim?" = "Wie sollen wir dich nennen?";
+"Bu ad karşılama ekranında ve profilinde görünür." = "Dieser Name erscheint auf dem Begrüßungsbildschirm und in deinem Profil.";
+"Bir kullanıcı adı seç" = "Wähle einen Benutzernamen";
+"Kupalarda ve profilinde görünür. İstersen sonra değiştirebilirsin." = "Wird bei Trophäen und in deinem Profil angezeigt. Du kannst ihn später ändern.";
+"Avatarını seç" = "Wähle deinen Avatar";
+"◀ ▶ ile simgeler arasında gez." = "Mit ◀ ▶ durch die Symbole blättern.";
+"Rengini seç" = "Wähle deine Farbe";
+"Profil kartın ve menüler bu renkle görünür." = "Deine Profilkarte und die Menüs verwenden diese Farbe.";
+"En sevdiğin oyun türü?" = "Lieblings-Genre?";
+"İsteğe bağlı. Atlamak için R1'e bas." = "Optional. Mit R1 überspringen.";
+"Her şey hazır!" = "Alles bereit!";
+"Bilgilerini kontrol et ve oturum aç." = "Prüfe deine Angaben und melde dich an.";
+"Yazmak için ✕ tuşuna bas" = "Zum Schreiben ✕ drücken";
+"Geri (○)" = "Zurück (○)";
+"İleri (R1)" = "Weiter (R1)";
+"Yaz" = "Schreiben";
+"Oluştur" = "Erstellen";
+"İleri" = "Weiter";

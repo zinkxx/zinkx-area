@@ -401,3 +401,25 @@
 "Yeni Oyuncu Profili" = "새 플레이어 프로필";
 "◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil   ○ Kapat" = "◀ ▶ 플레이어 선택   ✕ 로그인   □ 사용자 삭제   ○ 닫기";
 "◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil" = "◀ ▶ 플레이어 선택   ✕ 로그인   □ 사용자 삭제";
+
+/* New-player sign-up wizard */
+"Yeni Oyuncu" = "새 플레이어";
+"Adım %@ / %@" = "%@/%@ 단계";
+"Sana nasıl seslenelim?" = "어떻게 불러 드릴까요?";
+"Bu ad karşılama ekranında ve profilinde görünür." = "이 이름은 환영 화면과 프로필에 표시됩니다.";
+"Bir kullanıcı adı seç" = "사용자 이름 선택";
+"Kupalarda ve profilinde görünür. İstersen sonra değiştirebilirsin." = "트로피와 프로필에 표시됩니다. 나중에 변경할 수 있습니다.";
+"Avatarını seç" = "아바타 선택";
+"◀ ▶ ile simgeler arasında gez." = "◀ ▶ 로 아이콘을 둘러보세요.";
+"Rengini seç" = "색상 선택";
+"Profil kartın ve menüler bu renkle görünür." = "프로필 카드와 메뉴에 이 색상이 사용됩니다.";
+"En sevdiğin oyun türü?" = "좋아하는 게임 장르는?";
+"İsteğe bağlı. Atlamak için R1'e bas." = "선택 사항입니다. R1을 눌러 건너뛰세요.";
+"Her şey hazır!" = "준비 완료!";
+"Bilgilerini kontrol et ve oturum aç." = "정보를 확인하고 로그인하세요.";
+"Yazmak için ✕ tuşuna bas" = "✕ 를 눌러 입력";
+"Geri (○)" = "뒤로 (○)";
+"İleri (R1)" = "다음 (R1)";
+"Yaz" = "입력";
+"Oluştur" = "만들기";
+"İleri" = "다음";

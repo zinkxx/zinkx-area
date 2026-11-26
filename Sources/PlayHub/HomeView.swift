@@ -225,13 +225,11 @@ struct HomeView: View {
                 }
 
                 if editingProfile {
-                    ProfileEditorOverlay(editor: profileEditor) {
-                        let cancelledNewUser = profileEditor.isCreatingNewUser
-                        profileEditor.isCreatingNewUser = false
-                        if !cancelledNewUser { userSelectRequired = false }
-                        withAnimation(.easeInOut(duration: 0.25)) {
-                            editingProfile = false
-                            if cancelledNewUser { showingUserSelect = true }
+                    Group {
+                        if profileEditor.showsWizard {
+                            NewUserWizardView(editor: profileEditor) { closeProfileEditor() }
+                        } else {
+                            ProfileEditorOverlay(editor: profileEditor) { closeProfileEditor() }
                         }
                     }
                     .frame(width: geo.size.width, height: geo.size.height)
@@ -505,14 +503,8 @@ struct HomeView: View {
 
         if editingProfile {
             if profileEditor.handle(action, settings: settings) {
-                let cancelledNewUser = profileEditor.isCreatingNewUser
-                profileEditor.isCreatingNewUser = false
                 UserAccountStore.shared.syncCurrentFromSettings(settings)
-                if !cancelledNewUser { userSelectRequired = false }
-                withAnimation(.easeInOut(duration: 0.25)) {
-                    editingProfile = false
-                    if cancelledNewUser { showingUserSelect = true }
-                }
+                closeProfileEditor()
             }
             return
         }
@@ -780,13 +772,34 @@ struct HomeView: View {
         }
     }
 
+    /// Closes the profile editor or the new-player wizard. Backing out of the wizard returns
+    /// to the user picker; creating an account (or saving a profile) goes to the home screen.
+    private func closeProfileEditor() {
+        let cancelledNewUser = profileEditor.isCreatingNewUser
+        profileEditor.isCreatingNewUser = false
+        if cancelledNewUser {
+            // The picker sits above the wizard: fade it in, then drop the wizard behind it.
+            withAnimation(.easeInOut(duration: 0.25)) {
+                showingUserSelect = true
+            } completion: {
+                editingProfile = false
+            }
+        } else {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                editingProfile = false
+            } completion: {
+                userSelectRequired = false
+            }
+        }
+    }
+
     private func startCreatingNewUser() {
         AudioManager.shared.play(.open)
         profileEditor.loadForNewUser(from: settings)
-        withAnimation(.easeInOut(duration: 0.25)) {
-            showingUserSelect = false
-            editingProfile = true
-        }
+        // The picker is layered above the editor: put the opaque wizard underneath first, then
+        // fade the picker out, so the home screen never shows through mid-transition.
+        editingProfile = true
+        withAnimation(.easeInOut(duration: 0.25)) { showingUserSelect = false }
     }
 
     private func openDetail(_ g: Game) {

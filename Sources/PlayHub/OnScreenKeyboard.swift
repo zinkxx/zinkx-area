@@ -65,6 +65,11 @@ enum ProfileFieldKind: Int, CaseIterable, Identifiable {
     }
 }
 
+/// Steps of the full-screen "new player" sign-up flow.
+enum NewUserStep: Int, CaseIterable {
+    case name, gamertag, avatar, color, genre, review
+}
+
 enum KeyboardMode {
     case lower, upper, symbols
 }
@@ -82,6 +87,12 @@ final class ProfileEditorController: ObservableObject {
     @Published var avatar: Avatar = .controller
     @Published var isCreatingNewUser = false
 
+    // New-user sign-up wizard. `showsWizard` stays set until the next load so the wizard
+    // keeps showing while it fades out after the account was created.
+    @Published private(set) var showsWizard = false
+    @Published var wizardStep: NewUserStep = .name
+    @Published var accentChoice: AccentChoice = .blue
+
     // Editor navigation: 0..<8 are fields, 8 is bottom buttons (0 = Kaydet, 1 = Vazgeç)
     @Published var rowIndex = 0
     @Published var buttonCol = 0
@@ -97,6 +108,7 @@ final class ProfileEditorController: ObservableObject {
 
     func load(from s: AppSettings) {
         isCreatingNewUser = false
+        showsWizard = false
         fullName = s.fullName
         gamertag = s.gamertag
         displayName = s.profileName
@@ -122,6 +134,10 @@ final class ProfileEditorController: ObservableObject {
         genre = ""
         brandName = s.brandName
         avatar = avatars[nextNum % avatars.count]
+        let accents: [AccentChoice] = [.teal, .orange, .pink, .green, .red, .purple, .blue]
+        accentChoice = accents[nextNum % accents.count]
+        showsWizard = true
+        wizardStep = .name
         rowIndex = 0
         buttonCol = 0
         activeField = nil
@@ -150,6 +166,7 @@ final class ProfileEditorController: ObservableObject {
                 location: cLoc,
                 genre: genre,
                 avatar: avatar,
+                accent: accentChoice,
                 settings: s
             )
             isCreatingNewUser = false
@@ -275,6 +292,7 @@ final class ProfileEditorController: ObservableObject {
         setValue(kbText, for: field)
         AudioManager.shared.play(.confirm)
         activeField = nil
+        if showsWizard { advanceWizard() }
     }
 
     func cancelKeyboard() {
@@ -290,7 +308,83 @@ final class ProfileEditorController: ObservableObject {
             handleKeyboard(action)
             return false
         }
+        if showsWizard { return handleWizard(action, settings: settings) }
         return handleForm(action, settings: settings)
+    }
+
+    // MARK: - New-user wizard
+
+    /// Returns true when the wizard should close: the account was created (`isCreatingNewUser`
+    /// is then false) or the user backed out of the first step (it stays true).
+    private func handleWizard(_ action: NavAction, settings: AppSettings) -> Bool {
+        let audio = AudioManager.shared
+        switch action {
+        case .back:
+            return goBackInWizard()
+        case .left, .right:
+            stepWizardOption(action == .left ? -1 : 1)
+        case .confirm:
+            switch wizardStep {
+            case .name: openKeyboard(for: .displayName)
+            case .gamertag: openKeyboard(for: .gamertag)
+            case .review: return createAccount(settings: settings)
+            default: advanceWizard()
+            }
+        case .r1:
+            if wizardStep == .review { return createAccount(settings: settings) }
+            advanceWizard()
+        default:
+            break
+        }
+        return false
+    }
+
+    func stepWizardOption(_ delta: Int) {
+        let audio = AudioManager.shared
+        switch wizardStep {
+        case .avatar:
+            avatar = avatar.step(delta)
+        case .color:
+            accentChoice = accentChoice.step(delta)
+        case .genre:
+            let options = [""] + AppSettings.genres
+            let idx = options.firstIndex(of: genre) ?? 0
+            genre = options[(idx + delta + options.count) % options.count]
+        default:
+            return
+        }
+        audio.play(.tick)
+    }
+
+    func advanceWizard() {
+        if wizardStep == .name {
+            let name = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+            // A name is required; ask for it instead of moving on.
+            guard !name.isEmpty else { openKeyboard(for: .displayName); return }
+            if gamertag.isEmpty { gamertag = Self.suggestedGamertag(from: name) }
+        }
+        guard let next = NewUserStep(rawValue: wizardStep.rawValue + 1) else { return }
+        AudioManager.shared.play(.tick)
+        wizardStep = next
+    }
+
+    func goBackInWizard() -> Bool {
+        AudioManager.shared.play(.back)
+        guard let prev = NewUserStep(rawValue: wizardStep.rawValue - 1) else { return true }
+        wizardStep = prev
+        return false
+    }
+
+    func createAccount(settings: AppSettings) -> Bool {
+        AudioManager.shared.play(.confirm)
+        save(to: settings)
+        return true
+    }
+
+    static func suggestedGamertag(from name: String) -> String {
+        name.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: L10n.locale)
+            .lowercased(with: L10n.locale)
+            .filter { $0.isLetter || $0.isNumber || $0 == "_" }
     }
 
     private func handleForm(_ action: NavAction, settings: AppSettings) -> Bool {

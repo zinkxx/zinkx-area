@@ -282,6 +282,7 @@ final class UserAccountStore: ObservableObject {
         location: String,
         genre: String,
         avatar: Avatar,
+        accent: AccentChoice? = nil,
         settings s: AppSettings
     ) {
         syncCurrentFromSettings(s)
@@ -296,7 +297,7 @@ final class UserAccountStore: ObservableObject {
             location: location,
             favoriteGenre: genre,
             avatarRaw: avatar.rawValue,
-            accentRaw: accents[num % accents.count].rawValue,
+            accentRaw: (accent ?? accents[num % accents.count]).rawValue,
             rpcs3UserID: String(format: "%08d", num)
         )
         accounts.append(newAcc)

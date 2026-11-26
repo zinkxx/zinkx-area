@@ -401,3 +401,25 @@
 "Yeni Oyuncu Profili" = "新しいプレイヤープロフィール";
 "◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil   ○ Kapat" = "◀ ▶ プレイヤー選択   ✕ ログイン   □ ユーザー削除   ○ 閉じる";
 "◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil" = "◀ ▶ プレイヤー選択   ✕ ログイン   □ ユーザー削除";
+
+/* New-player sign-up wizard */
+"Yeni Oyuncu" = "新しいプレイヤー";
+"Adım %@ / %@" = "ステップ %@ / %@";
+"Sana nasıl seslenelim?" = "何と呼べばいいですか？";
+"Bu ad karşılama ekranında ve profilinde görünür." = "この名前はようこそ画面とプロフィールに表示されます。";
+"Bir kullanıcı adı seç" = "ユーザー名を選択";
+"Kupalarda ve profilinde görünür. İstersen sonra değiştirebilirsin." = "トロフィーとプロフィールに表示されます。後から変更できます。";
+"Avatarını seç" = "アバターを選択";
+"◀ ▶ ile simgeler arasında gez." = "◀ ▶ でアイコンを切り替えます。";
+"Rengini seç" = "カラーを選択";
+"Profil kartın ve menüler bu renkle görünür." = "プロフィールカードとメニューにこの色が使われます。";
+"En sevdiğin oyun türü?" = "好きなゲームジャンルは？";
+"İsteğe bağlı. Atlamak için R1'e bas." = "任意です。R1 でスキップ。";
+"Her şey hazır!" = "準備完了！";
+"Bilgilerini kontrol et ve oturum aç." = "内容を確認してログインしてください。";
+"Yazmak için ✕ tuşuna bas" = "✕ で入力";
+"Geri (○)" = "戻る (○)";
+"İleri (R1)" = "次へ (R1)";
+"Yaz" = "入力";
+"Oluştur" = "作成";
+"İleri" = "次へ";

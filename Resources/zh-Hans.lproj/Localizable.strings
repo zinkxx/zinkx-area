@@ -401,3 +401,25 @@
 "Yeni Oyuncu Profili" = "新玩家资料";
 "◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil   ○ Kapat" = "◀ ▶ 选择玩家   ✕ 登录   □ 删除用户   ○ 关闭";
 "◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil" = "◀ ▶ 选择玩家   ✕ 登录   □ 删除用户";
+
+/* New-player sign-up wizard */
+"Yeni Oyuncu" = "新玩家";
+"Adım %@ / %@" = "第 %@ 步，共 %@ 步";
+"Sana nasıl seslenelim?" = "我们该怎么称呼你？";
+"Bu ad karşılama ekranında ve profilinde görünür." = "此名称会显示在欢迎界面和你的个人资料中。";
+"Bir kullanıcı adı seç" = "选择用户名";
+"Kupalarda ve profilinde görünür. İstersen sonra değiştirebilirsin." = "显示在奖杯和个人资料中。之后可以更改。";
+"Avatarını seç" = "选择头像";
+"◀ ▶ ile simgeler arasında gez." = "使用 ◀ ▶ 浏览图标。";
+"Rengini seç" = "选择颜色";
+"Profil kartın ve menüler bu renkle görünür." = "你的资料卡和菜单将使用此颜色。";
+"En sevdiğin oyun türü?" = "最喜欢的游戏类型？";
+"İsteğe bağlı. Atlamak için R1'e bas." = "可选。按 R1 跳过。";
+"Her şey hazır!" = "一切就绪！";
+"Bilgilerini kontrol et ve oturum aç." = "检查你的信息并登录。";
+"Yazmak için ✕ tuşuna bas" = "按 ✕ 输入";
+"Geri (○)" = "返回 (○)";
+"İleri (R1)" = "下一步 (R1)";
+"Yaz" = "输入";
+"Oluştur" = "创建";
+"İleri" = "下一步";
