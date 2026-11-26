@@ -352,6 +352,8 @@ final class UserAccountStore: ObservableObject {
 struct UserSelectOverlay: View {
     @ObservedObject var store = UserAccountStore.shared
     @EnvironmentObject var settings: AppSettings
+    /// Fully hides the home screen behind it (startup picker).
+    var opaque = false
     let onAddNewUser: () -> Void
     let onClose: () -> Void
 
@@ -359,7 +361,7 @@ struct UserSelectOverlay: View {
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.88).ignoresSafeArea()
+            Color.black.opacity(opaque ? 1 : 0.88).ignoresSafeArea()
             WavesView(accent: accent, intensity: 0.65, sparks: true).ignoresSafeArea()
 
             VStack(spacing: 38) {
@@ -496,7 +498,7 @@ struct UserSelectOverlay: View {
                 }
                 .animation(.spring(response: 0.26, dampingFraction: 0.8), value: store.selectedIndex)
 
-                Text(L("◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil   ○ Kapat"))
+                Text(opaque ? L("◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil") : L("◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil   ○ Kapat"))
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.7))
                     .padding(.top, 10)

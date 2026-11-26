@@ -30,6 +30,8 @@ struct HomeView: View {
     @State private var detailFocus = 0
     @State private var editingProfile: Bool
     @State private var showingUserSelect: Bool
+    /// True until someone picks a user at startup: the picker is then opaque and cannot be dismissed.
+    @State private var userSelectRequired: Bool
     @StateObject private var profileEditor = ProfileEditorController()
     @StateObject private var mediaStore = GameMediaStore.shared
     @StateObject private var userStore = UserAccountStore.shared
@@ -58,7 +60,10 @@ struct HomeView: View {
         _editingProfile = State(initialValue: initialEditingProfile)
         let intro = initialIntroVisible ?? AppSettings.shared.introEnabled
         _introVisible = State(initialValue: intro)
-        _showingUserSelect = State(initialValue: initialShowingUserSelect ?? !intro)
+        // The picker sits underneath the boot intro from the start, so the intro's fade-out
+        // reveals the picker and never the home screen.
+        _showingUserSelect = State(initialValue: initialShowingUserSelect ?? true)
+        _userSelectRequired = State(initialValue: initialShowingUserSelect ?? true)
     }
 
     private let idleTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
@@ -223,6 +228,7 @@ struct HomeView: View {
                     ProfileEditorOverlay(editor: profileEditor) {
                         let cancelledNewUser = profileEditor.isCreatingNewUser
                         profileEditor.isCreatingNewUser = false
+                        if !cancelledNewUser { userSelectRequired = false }
                         withAnimation(.easeInOut(duration: 0.25)) {
                             editingProfile = false
                             if cancelledNewUser { showingUserSelect = true }
@@ -235,8 +241,9 @@ struct HomeView: View {
 
                 if showingUserSelect {
                     UserSelectOverlay(
+                        opaque: userSelectRequired,
                         onAddNewUser: { startCreatingNewUser() },
-                        onClose: { withAnimation(.easeInOut(duration: 0.25)) { showingUserSelect = false } }
+                        onClose: { dismissUserSelectAfterPick() }
                     )
                     .frame(width: geo.size.width, height: geo.size.height)
                     .clipped()
@@ -288,11 +295,12 @@ struct HomeView: View {
 
                 if introVisible {
                     IntroView(brand: settings.brandName, greeting: L("Hoş geldin, \(settings.greetingName)"), accent: accent) {
+                        // The intro schedules this on a timer that keeps running after a skip;
+                        // without this guard the user picker would reopen after a user was chosen.
+                        guard introVisible else { return }
                         UserAccountStore.shared.selectedIndex = 0
-                        withAnimation(.easeOut(duration: 0.3)) {
-                            introVisible = false
-                            showingUserSelect = true
-                        }
+                        showingUserSelect = true
+                        withAnimation(.easeOut(duration: 0.3)) { introVisible = false }
                     }
                     .frame(width: geo.size.width, height: geo.size.height)
                     .clipped()
@@ -406,16 +414,10 @@ struct HomeView: View {
 
     private func wire() {
         input.onAction = { handle($0) }
-        input.onActivity = { deliberate in
-            if introVisible {
-                guard deliberate else { return false }
-                UserAccountStore.shared.selectedIndex = 0
-                withAnimation(.easeOut(duration: 0.4)) {
-                    introVisible = false
-                    showingUserSelect = true
-                }
-                return true
-            }
+        input.onActivity = { _ in
+            // The boot intro always plays to the end; swallow input so a press neither skips it
+            // nor leaks through to the user picker that follows.
+            if introVisible { return true }
             if screensaver {
                 withAnimation(.easeInOut(duration: 0.6)) { screensaver = false }
                 return true
@@ -506,6 +508,7 @@ struct HomeView: View {
                 let cancelledNewUser = profileEditor.isCreatingNewUser
                 profileEditor.isCreatingNewUser = false
                 UserAccountStore.shared.syncCurrentFromSettings(settings)
+                if !cancelledNewUser { userSelectRequired = false }
                 withAnimation(.easeInOut(duration: 0.25)) {
                     editingProfile = false
                     if cancelledNewUser { showingUserSelect = true }
@@ -530,13 +533,15 @@ struct HomeView: View {
                 } else {
                     audio.play(.confirm)
                     store.switchTo(index: store.selectedIndex, settings: settings)
-                    withAnimation(.easeInOut(duration: 0.25)) { showingUserSelect = false }
+                    dismissUserSelectAfterPick()
                 }
             case .square:
                 if store.selectedIndex < store.accounts.count {
                     store.deleteAccount(at: store.selectedIndex, settings: settings)
                 }
             case .back:
+                // At startup a user must be chosen; Back must not reveal the home screen.
+                guard !userSelectRequired else { return }
                 audio.play(.back)
                 withAnimation(.easeInOut(duration: 0.25)) { showingUserSelect = false }
             default: break
@@ -763,6 +768,16 @@ struct HomeView: View {
         AudioManager.shared.play(.open)
         profileEditor.load(from: settings)
         withAnimation(.easeInOut(duration: 0.25)) { editingProfile = true }
+    }
+
+    /// Fades the picker out after a user was chosen. The startup picker stays opaque until the
+    /// fade has finished; dropping the flag first made the home screen flash through it.
+    private func dismissUserSelectAfterPick() {
+        withAnimation(.easeInOut(duration: 0.25)) {
+            showingUserSelect = false
+        } completion: {
+            userSelectRequired = false
+        }
     }
 
     private func startCreatingNewUser() {

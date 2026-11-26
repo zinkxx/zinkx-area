@@ -406,3 +406,4 @@
 "Kullanıcı Ekle" = "Add User";
 "Yeni Oyuncu Profili" = "New Player Profile";
 "◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil   ○ Kapat" = "◀ ▶ Choose Player   ✕ Sign In   □ Delete User   ○ Close";
+"◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil" = "◀ ▶ Choose Player   ✕ Sign In   □ Delete User";

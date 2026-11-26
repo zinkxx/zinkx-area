@@ -400,3 +400,4 @@
 "Kullanıcı Ekle" = "ユーザーを追加";
 "Yeni Oyuncu Profili" = "新しいプレイヤープロフィール";
 "◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil   ○ Kapat" = "◀ ▶ プレイヤー選択   ✕ ログイン   □ ユーザー削除   ○ 閉じる";
+"◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil" = "◀ ▶ プレイヤー選択   ✕ ログイン   □ ユーザー削除";

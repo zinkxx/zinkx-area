@@ -21,6 +21,8 @@ All notable changes to this project are documented here. The format follows [Kee
 - The console UI no longer competes with RPCS3 for CPU while a game runs. The hidden home screen used to keep animating at roughly 40% of a core. Its view tree is now dropped during play, and the background wave animation stops.
 - ffmpeg disc-media conversions are paused while a game runs and resume afterwards, so they no longer compete for CPU or for the game disk.
 - The background wave animation is capped at 30 fps on the home screen.
+- The boot intro now always plays to the end, and button presses during it are ignored. Skipping it used to reopen the user picker a few seconds after a user had already been chosen.
+- The startup user picker is opaque and has to be answered. The home screen no longer shows behind it or flashes through when the picker opens or closes, and Back no longer dismisses it.
 
 ## [2.0.0] - 2026-11-25
 
