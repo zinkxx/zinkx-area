@@ -15,6 +15,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Changed
 - The profile screen's action buttons are stacked in one column so longer translations fit.
 - GTA IV: the per-game RPCS3 settings are documented in code, and the audio buffer was raised from 150 ms to 200 ms to reduce stutter.
+- Sharper image on Retina displays. RPCS3 output is now upscaled with FidelityFX Super Resolution instead of bilinear stretching, and 16x anisotropic filtering is forced. In testing, Need for Speed Undercover at the 1080p profile ran at 55–60 fps on an M1 MacBook Air.
 
 ### Fixed
 - The console UI no longer competes with RPCS3 for CPU while a game runs. The hidden home screen used to keep animating at roughly 40% of a core. Its view tree is now dropped during play, and the background wave animation stops.

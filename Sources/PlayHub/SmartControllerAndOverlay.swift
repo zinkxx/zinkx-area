@@ -143,6 +143,11 @@ final class PerfProfileStore: ObservableObject {
         yml = replaceYAML(yml, key: "Shader Compiler Threads", value: "0")
         yml = replaceYAML(yml, key: "Driver Wake-Up Delay", value: isGTA4 ? "100" : "0")
         yml = replaceYAML(yml, key: "MSAA", value: "Auto")
+        // Image quality on high-DPI Macs: the 720p frame is upscaled to the Retina panel with FSR
+        // instead of a blurry bilinear stretch, and 16x anisotropic filtering keeps roads and
+        // distant textures sharp. Both are cheap on the GPU (games here are CPU/SPU-bound).
+        yml = replaceYAML(yml, key: "Output Scaling Mode", value: "FidelityFX Super Resolution")
+        yml = replaceYAML(yml, key: "Anisotropic Filter Override", value: "16")
         yml = replaceYAML(yml, key: "Shader Precision", value: "High")
         yml = replaceYAML(yml, key: "Multithreaded RSX", value: "false")
         yml = replaceYAML(yml, key: "Accurate ZCULL stats", value: "false")
