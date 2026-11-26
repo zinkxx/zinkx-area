@@ -4,6 +4,12 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+- `--export-screenshots` also renders the new-player wizard (`07-new-player.png`) and a four-language home-screen collage (`08-languages.png`).
+
+### Changed
+- README: a "What's new in 2.1" section, the new screenshots, and updated feature lists and architecture notes.
+
 ## [2.1.0] - 2026-11-26
 
 ### Added
