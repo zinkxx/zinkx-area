@@ -22,8 +22,21 @@ final class ConsoleWindow: NSWindow {
     }
 }
 
+/// Observable mirror of `AppDelegate.isGameActive` so views can pause continuous
+/// animations while RPCS3 is in front (the hidden window keeps rendering otherwise).
+final class GameActivity: ObservableObject {
+    static let shared = GameActivity()
+    @Published private(set) var isActive = false
+    fileprivate func set(_ active: Bool) { if isActive != active { isActive = active } }
+}
+
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    static var isGameActive = false
+    static var isGameActive = false {
+        didSet {
+            GameActivity.shared.set(isGameActive)
+            GameMediaStore.setPaused(isGameActive)
+        }
+    }
     static private(set) var mainWindow: ConsoleWindow?
     static private(set) var shared: AppDelegate?
 

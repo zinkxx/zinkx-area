@@ -88,9 +88,33 @@ final class GameMediaStore: ObservableObject {
 
     // MARK: - Background extraction from PS3 disc files via ffmpeg
 
+    // While a game runs, ffmpeg conversions are SIGSTOPped and new extraction work waits,
+    // so nothing here competes with RPCS3 for CPU or for the (often external) game disk.
+    private static let procLock = NSLock()
+    private static var activeProcs: [Process] = []
+    private static var paused = false
+
+    static func setPaused(_ pause: Bool) {
+        procLock.lock(); defer { procLock.unlock() }
+        guard paused != pause else { return }
+        paused = pause
+        for proc in activeProcs where proc.isRunning {
+            _ = pause ? proc.suspend() : proc.resume()
+        }
+    }
+
+    private static func waitWhilePaused() {
+        while true {
+            procLock.lock(); let p = paused; procLock.unlock()
+            if !p { return }
+            Thread.sleep(forTimeInterval: 2)
+        }
+    }
+
     private static func extractIfNeeded(for game: Game) {
         let fm = FileManager.default
         guard fm.isExecutableFile(atPath: ffmpegPath) else { return }
+        waitWhilePaused()
 
         let dir = cacheRoot.appendingPathComponent(game.titleID)
         try? fm.createDirectory(at: dir, withIntermediateDirectories: true)
@@ -189,11 +213,19 @@ final class GameMediaStore: ObservableObject {
     }
 
     private static func runFFmpeg(_ args: [String]) {
+        waitWhilePaused()
         let p = Process()
         p.executableURL = URL(fileURLWithPath: ffmpegPath)
         p.arguments = args
-        try? p.run()
+        guard (try? p.run()) != nil else { return }
+        procLock.lock()
+        activeProcs.append(p)
+        if paused { _ = p.suspend() }
+        procLock.unlock()
         p.waitUntilExit()
+        procLock.lock()
+        activeProcs.removeAll { $0 === p }
+        procLock.unlock()
     }
 }
 

@@ -2,6 +2,23 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- UI localization: English, German, French, Spanish, Japanese, Simplified Chinese and Korean alongside Turkish. The language follows macOS by default and can be changed live in Settings → Appearance → Language.
+- Dates, relative times, play time, percentages and file sizes are formatted for the selected language.
+- The on-screen keyboard uses a matching layout for German (QWERTZ), French (AZERTY), Spanish and English.
+- `scripts/l10n_check.py` checks every translation file for missing, unused or broken entries.
+
+### Changed
+- The profile screen's action buttons are stacked in one column so longer translations fit.
+- GTA IV: the per-game RPCS3 settings are documented in code, and the audio buffer was raised from 150 ms to 200 ms to reduce stutter.
+
+### Fixed
+- The console UI no longer competes with RPCS3 for CPU while a game runs. The hidden home screen used to keep animating at roughly 40% of a core. Its view tree is now dropped during play, and the background wave animation stops.
+- ffmpeg disc-media conversions are paused while a game runs and resume afterwards, so they no longer compete for CPU or for the game disk.
+- The background wave animation is capped at 30 fps on the home screen.
+
 ## [2.0.0] - 2026-11-25
 
 First public release.

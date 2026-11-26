@@ -171,7 +171,7 @@ struct TrophyRoomView: View {
                                 Text(g.title)
                                     .font(.system(size: 15, weight: .bold))
                                     .lineLimit(1)
-                                Text(total > 0 ? "\(unlocked) / \(total) Kupa" : "Kupa seti yok")
+                                Text(total > 0 ? L("\(unlocked) / \(total) Kupa") : L("Kupa seti yok"))
                                     .font(.system(size: 12, weight: .medium))
                                     .foregroundStyle(.white.opacity(0.65))
                             }
@@ -197,9 +197,9 @@ struct TrophyRoomView: View {
                     Image(systemName: "trophy.circle")
                         .font(.system(size: 54))
                         .foregroundStyle(.white.opacity(0.4))
-                    Text("Bu oyuna ait kupa listesi bulunmuyor")
+                    Text(L("Bu oyuna ait kupa listesi bulunmuyor"))
                         .font(.system(size: 20, weight: .bold))
-                    Text("Bazı eski PS3 oyunları kupa sisteminden önce çıkmıştır veya ilk açılışta kupa paketini kurar.")
+                    Text(L("Bazı eski PS3 oyunları kupa sisteminden önce çıkmıştır veya ilk açılışta kupa paketini kurar."))
                         .font(.system(size: 14))
                         .foregroundStyle(.white.opacity(0.6))
                     Spacer()
@@ -246,7 +246,7 @@ struct TrophyRoomView: View {
 
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 10) {
-                        Text("Kupa Seviyesi \(s.level)")
+                        Text(L("Kupa Seviyesi \(s.level)"))
                             .font(.system(size: 26, weight: .bold))
                         Text("\(s.totalUnlocked) / \(s.totalAvailable)")
                             .font(.system(size: 14, weight: .bold))
@@ -264,10 +264,10 @@ struct TrophyRoomView: View {
             Spacer()
 
             HStack(spacing: 24) {
-                gradePill("Platin", count: s.platinum, color: Color(red: 0.72, green: 0.82, blue: 0.95))
-                gradePill("Altın", count: s.gold, color: Color(red: 0.95, green: 0.76, blue: 0.25))
-                gradePill("Gümüş", count: s.silver, color: Color(red: 0.78, green: 0.8, blue: 0.84))
-                gradePill("Bronz", count: s.bronze, color: Color(red: 0.8, green: 0.5, blue: 0.3))
+                gradePill(L("Platin"), count: s.platinum, color: Color(red: 0.72, green: 0.82, blue: 0.95))
+                gradePill(L("Altın"), count: s.gold, color: Color(red: 0.95, green: 0.76, blue: 0.25))
+                gradePill(L("Gümüş"), count: s.silver, color: Color(red: 0.78, green: 0.8, blue: 0.84))
+                gradePill(L("Bronz"), count: s.bronze, color: Color(red: 0.8, green: 0.5, blue: 0.3))
             }
         }
         .padding(20)
@@ -309,15 +309,15 @@ struct ControlCenterDock: View {
             VStack(spacing: 18) {
                 // Selected card title & status pill
                 HStack(spacing: 14) {
-                    Text(items.indices.contains(index) ? items[index].title : "Kontrol Merkezi")
+                    Text(items.indices.contains(index) ? items[index].title : L("Kontrol Merkezi"))
                         .font(.system(size: 22, weight: .bold))
                     Text("·")
                         .foregroundStyle(.white.opacity(0.4))
                     HStack(spacing: 6) {
                         Image(systemName: "gamecontroller.fill")
-                        Text(controllerName ?? "Klavye & Kontrolcü")
+                        Text(controllerName ?? L("Klavye & Kontrolcü"))
                         if let batteryLevel {
-                            Text("%\(Int(batteryLevel * 100))")
+                            Text(Format.percent(Double(batteryLevel)))
                                 .foregroundStyle(.green)
                         }
                     }
@@ -368,7 +368,7 @@ struct ControlCenterDock: View {
                 .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(.white.opacity(0.2), lineWidth: 1.5))
                 .shadow(color: .black.opacity(0.75), radius: 36, y: 14)
 
-                Text("◀ ▶ Seç   ✕ Çalıştır   ○ Kapat")
+                Text(L("◀ ▶ Seç   ✕ Çalıştır   ○ Kapat"))
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.7))
             }

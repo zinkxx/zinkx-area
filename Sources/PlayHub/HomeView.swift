@@ -33,6 +33,7 @@ struct HomeView: View {
     @StateObject private var profileEditor = ProfileEditorController()
     @StateObject private var mediaStore = GameMediaStore.shared
     @StateObject private var userStore = UserAccountStore.shared
+    @ObservedObject private var gameActivity = GameActivity.shared
     @State private var slideIndex = 0
     @State private var showingVideo = true
     @State private var mediaDebounceWork: DispatchWorkItem?
@@ -82,78 +83,83 @@ struct HomeView: View {
 
     private var menuItems: [MenuItem] {
         [
-            MenuItem(title: "Oyunlar", icon: "gamecontroller.fill") { switchTab(to: .games) },
-            MenuItem(title: "Kupalar", icon: "trophy.fill") { switchTab(to: .trophies) },
-            MenuItem(title: "Profil", icon: "person.crop.circle.fill") { switchTab(to: .profile) },
-            MenuItem(title: "Kullanıcı", icon: "person.2.fill") {
+            MenuItem(title: L("Oyunlar"), icon: "gamecontroller.fill") { switchTab(to: .games) },
+            MenuItem(title: L("Kupalar"), icon: "trophy.fill") { switchTab(to: .trophies) },
+            MenuItem(title: L("Profil"), icon: "person.crop.circle.fill") { switchTab(to: .profile) },
+            MenuItem(title: L("Kullanıcı"), icon: "person.2.fill") {
                 AudioManager.shared.play(.open)
                 withAnimation(.easeInOut(duration: 0.25)) { showingUserSelect = true }
             },
-            MenuItem(title: "Ayarlar", icon: "gearshape.fill") { switchTab(to: .settings) },
-            MenuItem(title: "Ekran: \(settings.targetScreenShortName)", icon: "display.2") {
+            MenuItem(title: L("Ayarlar"), icon: "gearshape.fill") { switchTab(to: .settings) },
+            MenuItem(title: L("Ekran: \(settings.targetScreenShortName)"), icon: "display.2") {
                 settings.cycleScreen(1)
             },
-            MenuItem(title: settings.gameMusicEnabled ? "Müziği Kapat" : "Müziği Aç",
+            MenuItem(title: settings.gameMusicEnabled ? L("Müziği Kapat") : L("Müziği Aç"),
                      icon: settings.gameMusicEnabled ? "speaker.wave.3.fill" : "speaker.slash.fill") {
                 settings.gameMusicEnabled.toggle()
                 AudioManager.shared.refreshMusic()
                 ToastCenter.shared.show(
                     icon: settings.gameMusicEnabled ? "speaker.wave.3.fill" : "speaker.slash.fill",
-                    title: settings.gameMusicEnabled ? "Disk Müziği Açıldı" : "Disk Müziği Kapatıldı",
-                    subtitle: "SND0.AT3 arka plan müziği"
+                    title: settings.gameMusicEnabled ? L("Disk Müziği Açıldı") : L("Disk Müziği Kapatıldı"),
+                    subtitle: L("SND0.AT3 arka plan müziği")
                 )
             },
-            MenuItem(title: "Yenile", icon: "arrow.clockwise") {
+            MenuItem(title: L("Yenile"), icon: "arrow.clockwise") {
                 library.scan()
-                ToastCenter.shared.show(icon: "opticaldisc.fill", title: "Kütüphane Yenilendi", subtitle: "\(games.count) PS3 oyunu bulundu")
+                ToastCenter.shared.show(icon: "opticaldisc.fill", title: L("Kütüphane Yenilendi"), subtitle: L("\(games.count) PS3 oyunu bulundu"))
             },
             MenuItem(title: "RPCS3", icon: "cpu") {
                 NSWorkspace.shared.openApplication(at: GameLauncher.rpcs3App, configuration: .init())
             },
-            MenuItem(title: "Dinlenme", icon: "moon.zzz.fill") {
+            MenuItem(title: L("Dinlenme"), icon: "moon.zzz.fill") {
                 withAnimation(.easeInOut(duration: 0.8)) { screensaver = true }
             },
-            MenuItem(title: "Kapat", icon: "power") { NSApp.terminate(nil) },
+            MenuItem(title: L("Kapat"), icon: "power") { NSApp.terminate(nil) },
         ]
     }
 
     private var hints: [HintItem] {
         if detailGame != nil {
-            return [HintItem(symbol: "arrow.up.and.down.circle", text: "Kupalar / kayıtlar"),
-                    HintItem(symbol: "xmark.circle", text: "Seç"),
-                    HintItem(symbol: "square.circle", text: "Favori"),
-                    HintItem(symbol: "circle.circle", text: "Geri")]
+            return [HintItem(symbol: "arrow.up.and.down.circle", text: L("Kupalar / kayıtlar")),
+                    HintItem(symbol: "xmark.circle", text: L("Seç")),
+                    HintItem(symbol: "square.circle", text: L("Favori")),
+                    HintItem(symbol: "circle.circle", text: L("Geri"))]
         }
         switch tab {
         case .games:
-            var h = [HintItem(symbol: "xmark.circle", text: zone == .row ? (launcher.running != nil ? "Oyuna dön" : "Oyna") : "Seç"),
-                     HintItem(symbol: "triangle.circle", text: "Detaylar"),
-                     HintItem(symbol: "square.circle", text: "Favori"),
-                     HintItem(symbol: zone == .row ? "arrow.down.circle" : "arrow.up.circle", text: zone == .row ? "Seçenekler" : "Oyunlar")]
-            if launcher.running != nil { h.append(HintItem(symbol: "circle.circle", text: "Oyunu kapat")) }
-            h.append(HintItem(symbol: "line.3.horizontal.circle", text: "Menü"))
+            var h = [HintItem(symbol: "xmark.circle", text: zone == .row ? (launcher.running != nil ? L("Oyuna dön") : L("Oyna")) : L("Seç")),
+                     HintItem(symbol: "triangle.circle", text: L("Detaylar")),
+                     HintItem(symbol: "square.circle", text: L("Favori")),
+                     HintItem(symbol: zone == .row ? "arrow.down.circle" : "arrow.up.circle", text: zone == .row ? L("Seçenekler") : L("Oyunlar"))]
+            if launcher.running != nil { h.append(HintItem(symbol: "circle.circle", text: L("Oyunu kapat"))) }
+            h.append(HintItem(symbol: "line.3.horizontal.circle", text: L("Menü")))
             return h
         case .trophies:
-            return [HintItem(symbol: "arrow.left.and.right.circle", text: "Oyun Seç"),
-                    HintItem(symbol: "arrow.up.and.down.circle", text: "Kupalar"),
-                    HintItem(symbol: "triangle.circle", text: "Kupa Bildirimi Test"),
-                    HintItem(symbol: "circle.circle", text: "Geri"),
-                    HintItem(symbol: "line.3.horizontal.circle", text: "Kontrol Merkezi")]
+            return [HintItem(symbol: "arrow.left.and.right.circle", text: L("Oyun Seç")),
+                    HintItem(symbol: "arrow.up.and.down.circle", text: L("Kupalar")),
+                    HintItem(symbol: "triangle.circle", text: L("Kupa Bildirimi Test")),
+                    HintItem(symbol: "circle.circle", text: L("Geri")),
+                    HintItem(symbol: "line.3.horizontal.circle", text: L("Kontrol Merkezi"))]
         case .profile:
-            return [HintItem(symbol: "arrow.left.and.right.circle", text: "Seç"),
-                    HintItem(symbol: "xmark.circle", text: "Onayla"),
-                    HintItem(symbol: "line.3.horizontal.circle", text: "Menü")]
+            return [HintItem(symbol: "arrow.left.and.right.circle", text: L("Seç")),
+                    HintItem(symbol: "xmark.circle", text: L("Onayla")),
+                    HintItem(symbol: "line.3.horizontal.circle", text: L("Menü"))]
         case .settings:
-            return [HintItem(symbol: "arrow.up.and.down.circle", text: "Gezin"),
-                    HintItem(symbol: "arrow.left.and.right.circle", text: "Değiştir"),
-                    HintItem(symbol: "xmark.circle", text: "Seç"),
-                    HintItem(symbol: "circle.circle", text: "Geri"),
-                    HintItem(symbol: "line.3.horizontal.circle", text: "Menü")]
+            return [HintItem(symbol: "arrow.up.and.down.circle", text: L("Gezin")),
+                    HintItem(symbol: "arrow.left.and.right.circle", text: L("Değiştir")),
+                    HintItem(symbol: "xmark.circle", text: L("Seç")),
+                    HintItem(symbol: "circle.circle", text: L("Geri")),
+                    HintItem(symbol: "line.3.horizontal.circle", text: L("Menü"))]
         }
     }
 
     var body: some View {
         GeometryReader { geo in
+            // While RPCS3 is running the window is hidden; drop the whole view tree so no
+            // animation, video, timeline or image work competes with the emulator for CPU.
+            if gameActivity.isActive {
+                Color.black
+            } else {
             ZStack {
                 Color.black.ignoresSafeArea()
                 BackgroundView(
@@ -281,7 +287,7 @@ struct HomeView: View {
                 }
 
                 if introVisible {
-                    IntroView(brand: settings.brandName, greeting: "Hoş geldin, \(settings.greetingName)", accent: accent) {
+                    IntroView(brand: settings.brandName, greeting: L("Hoş geldin, \(settings.greetingName)"), accent: accent) {
                         UserAccountStore.shared.selectedIndex = 0
                         withAnimation(.easeOut(duration: 0.3)) {
                             introVisible = false
@@ -295,6 +301,9 @@ struct HomeView: View {
             }
             .frame(width: geo.size.width, height: geo.size.height)
             .clipped()
+            // Rebuild every screen when the UI language changes so all text is re-translated.
+            .id(settings.language)
+            }
         }
         .ignoresSafeArea()
         .animation(.easeInOut(duration: 0.25), value: editingProfile)
@@ -306,7 +315,7 @@ struct HomeView: View {
         .onAppear(perform: wire)
         .onReceive(idleTimer) { _ in checkIdle() }
         .onReceive(slideTimer) { _ in
-            guard !introVisible, !screensaver, launcher.running == nil else { return }
+            guard !introVisible, !screensaver, launcher.running == nil, !gameActivity.isActive else { return }
             slideIndex += 1
         }
         .onChange(of: introVisible) { _, vis in
@@ -324,8 +333,8 @@ struct HomeView: View {
             input.syncLightbar(newAccent)
             ToastCenter.shared.show(
                 icon: "paintpalette.fill",
-                title: "Tema & Işık Çubuğu: \(newAccent.title)",
-                subtitle: "Kontrolcü LED rengi senkronlandı"
+                title: L("Tema & Işık Çubuğu: \(newAccent.title)"),
+                subtitle: L("Kontrolcü LED rengi senkronlandı")
             )
         }
         .onChange(of: mediaStore.media) { _, _ in
@@ -588,7 +597,7 @@ struct HomeView: View {
                 let t = list[trophyRowIndex]
                 ToastCenter.shared.show(
                     icon: "trophy.fill",
-                    title: "🏆 \(t.typeName) Kupa: \(t.name)",
+                    title: L("🏆 \(t.typeName) Kupa: \(t.name)"),
                     subtitle: t.detail,
                     tint: t.color,
                     imageURL: t.iconURL
@@ -596,8 +605,8 @@ struct HomeView: View {
             } else {
                 ToastCenter.shared.show(
                     icon: "trophy.fill",
-                    title: "Kupa Seviyesi \(details.trophySummary.level)",
-                    subtitle: "Toplam \(details.trophySummary.totalUnlocked) / \(details.trophySummary.totalAvailable) kupa açıldı"
+                    title: L("Kupa Seviyesi \(details.trophySummary.level)"),
+                    subtitle: L("Toplam \(details.trophySummary.totalUnlocked) / \(details.trophySummary.totalAvailable) kupa açıldı")
                 )
             }
         case .back:
@@ -666,8 +675,8 @@ struct HomeView: View {
         let audio = AudioManager.shared
         let count = ProfileAction.allCases.count
         switch action {
-        case .left: if profileIndex > 0 { profileIndex -= 1; audio.play(.tick) }
-        case .right: if profileIndex < count - 1 { profileIndex += 1; audio.play(.tick) }
+        case .left, .up: if profileIndex > 0 { profileIndex -= 1; audio.play(.tick) }
+        case .right, .down: if profileIndex < count - 1 { profileIndex += 1; audio.play(.tick) }
         case .confirm: audio.play(.confirm); runProfileAction(ProfileAction.allCases[profileIndex])
         case .back: switchTab(to: .games)
         default: break
@@ -725,12 +734,12 @@ struct HomeView: View {
             AudioManager.shared.play(.tick)
             PerfProfileStore.shared.update(g.titleID) { $0.res = $0.res.step(1) }
             let label = PerfProfileStore.shared.profile(for: g.titleID).res.label
-            ToastCenter.shared.show(icon: "sparkles.tv", title: "Çözünürlük: \(label)", subtitle: "\(g.title) özel RPCS3 profili")
+            ToastCenter.shared.show(icon: "sparkles.tv", title: L("Çözünürlük: \(label)"), subtitle: L("\(g.title) özel RPCS3 profili"))
         case .fps:
             AudioManager.shared.play(.tick)
             PerfProfileStore.shared.update(g.titleID) { $0.fps = $0.fps.step(1) }
             let label = PerfProfileStore.shared.profile(for: g.titleID).fps.label
-            ToastCenter.shared.show(icon: "gauge.with.dots.needle.67percent", title: "FPS Limiti: \(label)", subtitle: "\(g.title) özel RPCS3 profili")
+            ToastCenter.shared.show(icon: "gauge.with.dots.needle.67percent", title: L("FPS Limiti: \(label)"), subtitle: L("\(g.title) özel RPCS3 profili"))
         case .reveal:
             AudioManager.shared.play(.confirm)
             NSWorkspace.shared.activateFileViewerSelecting([g.bootPath])
@@ -783,7 +792,7 @@ struct HomeView: View {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { settings.toggleFavorite(g.id) }
         ToastCenter.shared.show(
             icon: willAdd ? "star.fill" : "star.slash",
-            title: willAdd ? "Favorilere Eklendi" : "Favorilerden Çıkarıldı",
+            title: willAdd ? L("Favorilere Eklendi") : L("Favorilerden Çıkarıldı"),
             subtitle: g.title,
             imageURL: g.iconURL
         )

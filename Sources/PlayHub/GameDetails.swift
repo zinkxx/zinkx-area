@@ -15,10 +15,10 @@ struct TrophyInfo: Identifiable {
 
     var typeName: String {
         switch type {
-        case "P": "Platin"
-        case "G": "Altın"
-        case "S": "Gümüş"
-        default: "Bronz"
+        case "P": L("Platin")
+        case "G": L("Altın")
+        case "S": L("Gümüş")
+        default: L("Bronz")
         }
     }
 
@@ -48,11 +48,11 @@ struct CompatInfo: Codable {
 
     var label: String {
         switch status {
-        case "Playable": "Oynanabilir"
-        case "Ingame": "Oyun içi (sorunlu)"
-        case "Intro": "Sadece giriş"
-        case "Loadable": "Yükleniyor ama oynanmıyor"
-        case "Nothing": "Çalışmıyor"
+        case "Playable": L("Oynanabilir")
+        case "Ingame": L("Oyun içi (sorunlu)")
+        case "Intro": L("Sadece giriş")
+        case "Loadable": L("Yükleniyor ama oynanmıyor")
+        case "Nothing": L("Çalışmıyor")
         default: status
         }
     }
@@ -68,7 +68,7 @@ struct CompatInfo: Codable {
 }
 
 struct GameDetails {
-    var region = "Bilinmiyor"
+    var region = L("Bilinmiyor")
     var version: String?
     var updateVersion: String?
     var resolutions: [String] = []
@@ -88,7 +88,7 @@ struct GameDetails {
         }
     }
     var sizeText: String? {
-        sizeBytes.map { ByteCountFormatter.string(fromByteCount: $0, countStyle: .file) }
+        sizeBytes.map { $0.formatted(.byteCount(style: .file).locale(L10n.locale)) }
     }
 }
 
@@ -190,15 +190,15 @@ final class DetailsStore: ObservableObject {
 
     static func region(for id: String) -> String {
         let chars = Array(id)
-        guard chars.count >= 3 else { return "Bilinmiyor" }
+        guard chars.count >= 3 else { return L("Bilinmiyor") }
         switch chars[2] {
-        case "E": return "Avrupa"
-        case "U": return "Amerika"
-        case "J": return "Japonya"
-        case "A": return "Asya"
-        case "K": return "Kore"
+        case "E": return L("Avrupa")
+        case "U": return L("Amerika")
+        case "J": return L("Japonya")
+        case "A": return L("Asya")
+        case "K": return L("Kore")
         case "H": return "Hong Kong"
-        default: return "Bilinmiyor"
+        default: return L("Bilinmiyor")
         }
     }
 
@@ -217,7 +217,7 @@ final class DetailsStore: ObservableObject {
         if mask & 0x04 != 0 { out.append("LPCM 5.1") }
         if mask & 0x100 != 0 { out.append("Dolby Digital") }
         if mask & 0x200 != 0 { out.append("DTS") }
-        if mask & 0x01 != 0 && out.isEmpty { out.append("Stereo") }
+        if mask & 0x01 != 0 && out.isEmpty { out.append(L("Stereo")) }
         return out
     }
 

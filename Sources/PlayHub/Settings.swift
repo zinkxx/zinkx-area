@@ -20,11 +20,11 @@ enum IntroSound: String, SettingOption {
     case classic, crystal, deep, custom, off
     var title: String {
         switch self {
-        case .classic: "Klasik"
-        case .crystal: "Kristal"
-        case .deep: "Derin"
-        case .custom: "Özel dosya"
-        case .off: "Sessiz"
+        case .classic: L("Klasik")
+        case .crystal: L("Kristal")
+        case .deep: L("Derin")
+        case .custom: L("Özel dosya")
+        case .off: L("Sessiz")
         }
     }
 }
@@ -33,9 +33,9 @@ enum UISoundStyle: String, SettingOption {
     case soft, system, off
     var title: String {
         switch self {
-        case .soft: "Yumuşak"
-        case .system: "Sistem"
-        case .off: "Kapalı"
+        case .soft: L("Yumuşak")
+        case .system: L("Sistem")
+        case .off: L("Kapalı")
         }
     }
 }
@@ -44,9 +44,9 @@ enum BackgroundStyle: String, SettingOption {
     case artwork, both, waves
     var title: String {
         switch self {
-        case .artwork: "Oyun medyası"
-        case .both: "Medya + dalgalar"
-        case .waves: "PS3 dalgaları"
+        case .artwork: L("Oyun medyası")
+        case .both: L("Medya + dalgalar")
+        case .waves: L("PS3 dalgaları")
         }
     }
 }
@@ -55,9 +55,9 @@ enum GameMediaDisplay: String, SettingOption {
     case videoAndSlides, slidesOnly, staticArt
     var title: String {
         switch self {
-        case .videoAndSlides: "Video + Fotoğraf Slaytı"
-        case .slidesOnly: "Fotoğraf Slaytı"
-        case .staticArt: "Sabit Görsel"
+        case .videoAndSlides: L("Video + Fotoğraf Slaytı")
+        case .slidesOnly: L("Fotoğraf Slaytı")
+        case .staticArt: L("Sabit Görsel")
         }
     }
 }
@@ -66,13 +66,13 @@ enum AccentChoice: String, SettingOption {
     case blue, purple, pink, red, orange, green, teal
     var title: String {
         switch self {
-        case .blue: "Mavi"
-        case .purple: "Mor"
-        case .pink: "Pembe"
-        case .red: "Kırmızı"
-        case .orange: "Turuncu"
-        case .green: "Yeşil"
-        case .teal: "Turkuaz"
+        case .blue: L("Mavi")
+        case .purple: L("Mor")
+        case .pink: L("Pembe")
+        case .red: L("Kırmızı")
+        case .orange: L("Turuncu")
+        case .green: L("Yeşil")
+        case .teal: L("Turkuaz")
         }
     }
     var color: Color {
@@ -103,9 +103,9 @@ enum CardSize: String, SettingOption {
     case small, normal, large
     var title: String {
         switch self {
-        case .small: "Küçük"
-        case .normal: "Normal"
-        case .large: "Büyük"
+        case .small: L("Küçük")
+        case .normal: L("Normal")
+        case .large: L("Büyük")
         }
     }
     var scale: CGFloat {
@@ -119,17 +119,17 @@ enum CardSize: String, SettingOption {
 
 enum SortOrder: String, SettingOption {
     case recent, alphabetical
-    var title: String { self == .recent ? "Son oynanan" : "A – Z" }
+    var title: String { self == .recent ? L("Son oynanan") : L("A – Z") }
 }
 
 enum ScreensaverDelay: String, SettingOption {
     case off, two, five, ten
     var title: String {
         switch self {
-        case .off: "Kapalı"
-        case .two: "2 dakika"
-        case .five: "5 dakika"
-        case .ten: "10 dakika"
+        case .off: L("Kapalı")
+        case .two: L("2 dakika")
+        case .five: L("5 dakika")
+        case .ten: L("10 dakika")
         }
     }
     var minutes: Int? {
@@ -146,15 +146,15 @@ enum Avatar: String, SettingOption {
     case controller, person, star, flame, bolt, moon, crown, hare, paw
     var title: String {
         switch self {
-        case .controller: "Gamepad"
-        case .person: "Kişi"
-        case .star: "Yıldız"
-        case .flame: "Alev"
-        case .bolt: "Şimşek"
-        case .moon: "Ay"
-        case .crown: "Taç"
-        case .hare: "Tavşan"
-        case .paw: "Pati"
+        case .controller: L("Gamepad")
+        case .person: L("Kişi")
+        case .star: L("Yıldız")
+        case .flame: L("Alev")
+        case .bolt: L("Şimşek")
+        case .moon: L("Ay")
+        case .crown: L("Taç")
+        case .hare: L("Tavşan")
+        case .paw: L("Pati")
         }
     }
     var symbol: String {
@@ -188,6 +188,12 @@ final class AppSettings: ObservableObject {
     @Published var musicVolume: Double { didSet { Self.d.set(musicVolume, forKey: "musicVolume") } }
 
     // Look
+    @Published var language: AppLanguage {
+        didSet {
+            Self.d.set(language.rawValue, forKey: "language")
+            L10n.apply(language)
+        }
+    }
     @Published var preferredScreenName: String { didSet { Self.d.set(preferredScreenName, forKey: "preferredScreenName") } }
     @Published var background: BackgroundStyle { didSet { Self.d.set(background.rawValue, forKey: "background") } }
     @Published var gameMediaDisplay: GameMediaDisplay { didSet { Self.d.set(gameMediaDisplay.rawValue, forKey: "gameMediaDisplay") } }
@@ -210,7 +216,7 @@ final class AppSettings: ObservableObject {
     @Published var favorites: [String] { didSet { Self.d.set(favorites, forKey: "favorites") } }
     let memberSince: Date
 
-    static let genres = ["Aksiyon", "Macera", "Yarış", "RPG", "Spor", "Dövüş", "Korku", "Nişancı", "Platform", "Strateji", "Açık dünya"]
+    static let genres = [LKey("Aksiyon"), LKey("Macera"), LKey("Yarış"), LKey("RPG"), LKey("Spor"), LKey("Dövüş"), LKey("Korku"), LKey("Nişancı"), LKey("Platform"), LKey("Strateji"), LKey("Açık dünya")]
 
     var greetingName: String { gamertag.isEmpty ? profileName : gamertag }
 
@@ -238,6 +244,9 @@ final class AppSettings: ObservableObject {
         musicEnabled = bool("musicEnabled", false)
         musicVolume = double("musicVolume", 0.45)
 
+        let lang = option("language", AppLanguage.system)
+        L10n.apply(lang)
+        language = lang
         preferredScreenName = d.string(forKey: "preferredScreenName") ?? ""
         background = option("background", BackgroundStyle.artwork)
         gameMediaDisplay = option("gameMediaDisplay", GameMediaDisplay.videoAndSlides)
@@ -297,12 +306,12 @@ final class AppSettings: ObservableObject {
     }
 
     var targetScreenTitle: String {
-        guard let s = targetScreen else { return "Ana Ekran" }
+        guard let s = targetScreen else { return L("Ana Ekran") }
         return "\(s.localizedName) (\(Int(s.frame.width))×\(Int(s.frame.height)))"
     }
 
     var targetScreenShortName: String {
-        guard let s = targetScreen else { return "Ekran 1" }
+        guard let s = targetScreen else { return L("Ekran 1") }
         return s.localizedName
     }
 
@@ -317,8 +326,8 @@ final class AppSettings: ObservableObject {
         GameLauncher.enforceRPCS3FullScreenINI()
         ToastCenter.shared.show(
             icon: "display.2",
-            title: "🖥️ Aktif Ekran: \(chosen.localizedName)",
-            subtitle: "\(Int(chosen.frame.width))×\(Int(chosen.frame.height)) · Menü ve oyunlar bu ekrana taşındı"
+            title: L("🖥️ Aktif Ekran: \(chosen.localizedName)"),
+            subtitle: L("\(Int(chosen.frame.width))×\(Int(chosen.frame.height)) · Menü ve oyunlar bu ekrana taşındı")
         )
     }
 }

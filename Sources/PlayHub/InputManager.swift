@@ -40,8 +40,8 @@ final class InputManager: ObservableObject {
                 self?.syncLightbar()
                 ToastCenter.shared.show(
                     icon: "gamecontroller.fill",
-                    title: "Kontrolcü Bağlandı",
-                    subtitle: c.vendorName ?? "Kablosuz Kontrolcü"
+                    title: L("Kontrolcü Bağlandı"),
+                    subtitle: c.vendorName ?? L("Kablosuz Kontrolcü")
                 )
             }
         }
@@ -50,8 +50,8 @@ final class InputManager: ObservableObject {
             self?.refreshInfo()
             ToastCenter.shared.show(
                 icon: "gamecontroller",
-                title: "Kontrolcü Bağlantısı Kesildi",
-                subtitle: "Bluetooth bağlantısını kontrol et"
+                title: L("Kontrolcü Bağlantısı Kesildi"),
+                subtitle: L("Bluetooth bağlantısını kontrol et")
             )
         }
         GCController.controllers().forEach { setup($0) }

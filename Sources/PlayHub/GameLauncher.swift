@@ -22,7 +22,7 @@ final class GameLauncher: ObservableObject {
     private var startDate: Date?
 
     var elapsedText: String {
-        guard let startDate else { return "0 dk" }
+        guard let startDate else { return L("0 dk") }
         return Format.duration(Date().timeIntervalSince(startDate))
     }
 
@@ -46,20 +46,20 @@ final class GameLauncher: ObservableObject {
     func launch(_ game: Game) {
         if let current = running {
             if current.id == game.id { focusGame() } else {
-                errorMessage = "Önce çalışan oyunu kapat: \(current.title)"
+                errorMessage = L("Önce çalışan oyunu kapat: \(current.title)")
             }
             return
         }
         guard FileManager.default.fileExists(atPath: Self.rpcs3App.path) else {
-            errorMessage = "RPCS3 bulunamadı (/Applications/RPCS3.app)."
+            errorMessage = L("RPCS3 bulunamadı (/Applications/RPCS3.app).")
             return
         }
         guard FileManager.default.fileExists(atPath: game.bootPath.path) else {
-            errorMessage = "Oyun dosyaları bulunamadı. Harici disk bağlı mı?"
+            errorMessage = L("Oyun dosyaları bulunamadı. Harici disk bağlı mı?")
             return
         }
         guard !otherRPCS3Running else {
-            errorMessage = "RPCS3 zaten açık. Önce RPCS3 penceresini kapat (⌘Q)."
+            errorMessage = L("RPCS3 zaten açık. Önce RPCS3 penceresini kapat (⌘Q).")
             return
         }
 
@@ -95,7 +95,7 @@ final class GameLauncher: ObservableObject {
                     self.launching = false
                     AudioManager.shared.gameRunning = false
                     AppDelegate.restoreFromGame()
-                    self.errorMessage = "Oyun başlatılamadı: \(error.localizedDescription)"
+                    self.errorMessage = L("Oyun başlatılamadı: \(error.localizedDescription)")
                     return
                 }
                 self.app = app
@@ -133,7 +133,7 @@ final class GameLauncher: ObservableObject {
         app = nil
         AudioManager.shared.gameRunning = false
         if seconds < 4 {
-            errorMessage = "\(game.title) açılamadı. RPCS3'ü normal açıp oyunu oradan dene."
+            errorMessage = L("\(game.title) açılamadı. RPCS3'ü normal açıp oyunu oradan dene.")
         }
         onFinished?(game, seconds)
         AppDelegate.restoreFromGame()

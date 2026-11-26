@@ -16,7 +16,7 @@ struct ActionButton: View {
         Button(action: action) {
             HStack(spacing: 10) {
                 Image(systemName: icon)
-                Text(title).lineLimit(1)
+                Text(title).lineLimit(1).minimumScaleFactor(0.8)
             }
             .font(.system(size: large ? 22 : 16, weight: .bold))
             .foregroundStyle(primary || focused ? Color.black : .white)
@@ -79,7 +79,7 @@ struct GameInfoView: View {
                                 Image(systemName: "waveform")
                                     .symbolEffect(.variableColor.iterative, isActive: true)
                                     .foregroundStyle(accent.mix(with: .white, by: 0.45))
-                                Text("Disk Müziği Çalıyor")
+                                Text(L("Disk Müziği Çalıyor"))
                             }
                             .font(.system(size: 13, weight: .bold))
                             .padding(.horizontal, 12).padding(.vertical, 6)
@@ -87,9 +87,9 @@ struct GameInfoView: View {
                             .overlay(Capsule().strokeBorder(accent.mix(with: .white, by: 0.4).opacity(0.6), lineWidth: 1))
                         }
                         if let last = stats?.lastPlayed {
-                            Chip(text: "Son oynama: \(Format.relative(last))")
+                            Chip(text: L("Son oynama: \(Format.relative(last))"))
                         } else {
-                            Chip(text: "Hiç oynanmadı")
+                            Chip(text: L("Hiç oynanmadı"))
                         }
                     }
 
@@ -124,11 +124,11 @@ struct GameInfoView: View {
 
     private func label(_ a: GameAction) -> (String, String) {
         switch a {
-        case .play: isRunning ? ("Oyuna dön", "arrow.uturn.forward") : ("Oyna", "play.fill")
-        case .details: ("Detaylar", "info.circle")
-        case .favorite: isFavorite ? ("Favorilerde", "star.fill") : ("Favorilere ekle", "star")
-        case .toggleMedia: showingVideo ? ("Fotoğraf Slaytı", "photo.on.rectangle.angled") : ("Disk Videosu", "film.fill")
-        case .close: ("Oyunu kapat", "xmark")
+        case .play: isRunning ? (L("Oyuna dön"), "arrow.uturn.forward") : (L("Oyna"), "play.fill")
+        case .details: (L("Detaylar"), "info.circle")
+        case .favorite: isFavorite ? (L("Favorilerde"), "star.fill") : (L("Favorilere ekle"), "star")
+        case .toggleMedia: showingVideo ? (L("Fotoğraf Slaytı"), "photo.on.rectangle.angled") : (L("Disk Videosu"), "film.fill")
+        case .close: (L("Oyunu kapat"), "xmark")
         }
     }
 }
@@ -147,7 +147,7 @@ struct DiscMediaStrip: View {
             HStack(spacing: 8) {
                 Image(systemName: "opticaldisc.fill")
                     .foregroundStyle(accent.mix(with: .white, by: 0.45))
-                Text("CD MEDYA GALERİSİ")
+                Text(L("CD MEDYA GALERİSİ"))
                     .font(.system(size: 11, weight: .heavy))
                     .tracking(1.4)
                     .foregroundStyle(.white.opacity(0.7))
@@ -155,7 +155,7 @@ struct DiscMediaStrip: View {
                     Button(action: onToggleVideo) {
                         HStack(spacing: 5) {
                             Image(systemName: showingVideo ? "film.fill" : "photo.stack.fill")
-                            Text(showingVideo ? "VİDEO AKTİF" : "SLAYT AKTİF")
+                            Text(showingVideo ? L("VİDEO AKTİF") : L("SLAYT AKTİF"))
                         }
                         .font(.system(size: 10, weight: .heavy))
                         .padding(.horizontal, 9)
@@ -212,28 +212,28 @@ struct InfoShelf: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            InfoCard(icon: "clock", title: "Oynama süresi",
-                     value: (stats?.totalSeconds ?? 0) > 0 ? Format.duration(stats!.totalSeconds) : "Henüz yok",
-                     sub: stats?.sessions.map { "\($0) oturum" })
-            InfoCard(icon: "trophy", title: "Kupalar",
+            InfoCard(icon: "clock", title: L("Oynama süresi"),
+                     value: (stats?.totalSeconds ?? 0) > 0 ? Format.duration(stats!.totalSeconds) : L("Henüz yok"),
+                     sub: stats?.sessions.map { L("\($0) oturum") })
+            InfoCard(icon: "trophy", title: L("Kupalar"),
                      value: trophyValue,
                      sub: details?.trophyCounts.map { "\($0.2) \($0.0.prefix(1))" }.joined(separator: " · "),
                      progress: trophyProgress, accent: accent)
-            InfoCard(icon: "externaldrive.fill.badge.checkmark", title: "Kayıtlar",
-                     value: details.map { $0.saves.isEmpty ? "Kayıt yok" : "\($0.saves.count) kayıt" } ?? "…",
-                     sub: details?.saves.first?.modified.map { "Son: \(Format.relative($0))" })
-            InfoCard(icon: "checkmark.seal", title: "RPCS3 uyumluluğu",
-                     value: compat?.label ?? "Bilinmiyor", dot: compat?.color)
-            InfoCard(icon: "internaldrive", title: "Boyut", value: details?.sizeText ?? "Hesaplanıyor…")
-            InfoCard(icon: "number", title: "Sürüm",
+            InfoCard(icon: "externaldrive.fill.badge.checkmark", title: L("Kayıtlar"),
+                     value: details.map { $0.saves.isEmpty ? L("Kayıt yok") : L("\($0.saves.count) kayıt") } ?? "…",
+                     sub: details?.saves.first?.modified.map { L("Son: \(Format.relative($0))") })
+            InfoCard(icon: "checkmark.seal", title: L("RPCS3 uyumluluğu"),
+                     value: compat?.label ?? L("Bilinmiyor"), dot: compat?.color)
+            InfoCard(icon: "internaldrive", title: L("Boyut"), value: details?.sizeText ?? L("Hesaplanıyor…"))
+            InfoCard(icon: "number", title: L("Sürüm"),
                      value: details?.version ?? "—",
-                     sub: details?.updateVersion.map { "Güncelleme \($0) kurulu" })
+                     sub: details?.updateVersion.map { L("Güncelleme \($0) kurulu") })
         }
     }
 
     private var trophyValue: String {
         guard let d = details else { return "…" }
-        return d.trophies.isEmpty ? "Kupa yok" : "\(d.unlocked) / \(d.trophies.count)"
+        return d.trophies.isEmpty ? L("Kupa yok") : "\(d.unlocked) / \(d.trophies.count)"
     }
 
     private var trophyProgress: Double? {
@@ -361,7 +361,7 @@ struct GameDetailView: View {
                 HStack(spacing: 10) {
                     Chip(text: details?.region ?? "")
                     Chip(text: game.titleID)
-                    if let v = details?.version { Chip(text: "Sürüm \(v)") }
+                    if let v = details?.version { Chip(text: L("Sürüm \(v)")) }
                     if let c = compat {
                         HStack(spacing: 6) { Circle().fill(c.color).frame(width: 8, height: 8); Text(c.label) }
                             .font(.system(size: 14, weight: .medium))
@@ -370,13 +370,13 @@ struct GameDetailView: View {
                     }
                 }
                 HStack(spacing: 12) {
-                    ActionButton(title: isRunning ? "Oyuna dön" : "Oyna", icon: isRunning ? "arrow.uturn.forward" : "play.fill",
+                    ActionButton(title: isRunning ? L("Oyuna dön") : L("Oyna"), icon: isRunning ? "arrow.uturn.forward" : "play.fill",
                                  focused: focus == 0, accent: accent, primary: true, large: true) { onAction(.play) }
-                    ActionButton(title: isFavorite ? "Favorilerde" : "Favori", icon: isFavorite ? "star.fill" : "star",
+                    ActionButton(title: isFavorite ? L("Favorilerde") : L("Favori"), icon: isFavorite ? "star.fill" : "star",
                                  focused: focus == 1, accent: accent) { onAction(.favorite) }
-                    ActionButton(title: "Çözünürlük: \(perf.res.label)", icon: "sparkles.tv",
+                    ActionButton(title: L("Çözünürlük: \(perf.res.label)"), icon: "sparkles.tv",
                                  focused: focus == 2, accent: accent) { onAction(.resolution) }
-                    ActionButton(title: "FPS: \(perf.fps.label)", icon: "gauge.with.dots.needle.67percent",
+                    ActionButton(title: L("FPS: \(perf.fps.label)"), icon: "gauge.with.dots.needle.67percent",
                                  focused: focus == 3, accent: accent) { onAction(.fps) }
                     ActionButton(title: "Finder", icon: "folder", focused: focus == 4, accent: accent) { onAction(.reveal) }
                 }
@@ -388,29 +388,29 @@ struct GameDetailView: View {
     // MARK: Left column
 
     private var infoCard: some View {
-        DetailCard(title: "Oyun bilgileri", icon: "info.circle") {
-            InfoRow("Bölge", details?.region ?? "—")
-            InfoRow("Oyun kimliği", game.titleID)
-            InfoRow("Tür", game.isDisc ? "Disk oyunu" : "Dijital (PSN)")
-            InfoRow("Sürüm", details?.version ?? "—")
-            InfoRow("Güncelleme", details?.updateVersion.map { "\($0) kurulu" } ?? "Yok")
-            InfoRow("Gerekli firmware", details?.systemVersion ?? "—")
-            InfoRow("Çözünürlük", details?.resolutions.joined(separator: ", ").nilIfEmpty ?? "—")
-            InfoRow("Ses", details?.sound.joined(separator: ", ").nilIfEmpty ?? "—")
-            InfoRow("Yaş sınırı", details?.parental ?? "—")
-            InfoRow("Boyut", details?.sizeText ?? "Hesaplanıyor…")
-            InfoRow("RPCS3 Çözünürlük", perf.res.label)
-            InfoRow("RPCS3 FPS Limiti", perf.fps.label)
-            InfoRow("Uyumluluk", compat.map { c in c.date.map { "\(c.label) (\($0))" } ?? c.label } ?? "Bilinmiyor")
+        DetailCard(title: L("Oyun bilgileri"), icon: "info.circle") {
+            InfoRow(L("Bölge"), details?.region ?? "—")
+            InfoRow(L("Oyun kimliği"), game.titleID)
+            InfoRow(L("Tür"), game.isDisc ? L("Disk oyunu") : L("Dijital (PSN)"))
+            InfoRow(L("Sürüm"), details?.version ?? "—")
+            InfoRow(L("Güncelleme"), details?.updateVersion.map { L("\($0) kurulu") } ?? L("Yok"))
+            InfoRow(L("Gerekli firmware"), details?.systemVersion ?? "—")
+            InfoRow(L("Çözünürlük"), details?.resolutions.joined(separator: ", ").nilIfEmpty ?? "—")
+            InfoRow(L("Ses"), details?.sound.joined(separator: ", ").nilIfEmpty ?? "—")
+            InfoRow(L("Yaş sınırı"), details?.parental ?? "—")
+            InfoRow(L("Boyut"), details?.sizeText ?? L("Hesaplanıyor…"))
+            InfoRow(L("RPCS3 Çözünürlük"), perf.res.label)
+            InfoRow(L("RPCS3 FPS Limiti"), perf.fps.label)
+            InfoRow(L("Uyumluluk"), compat.map { c in c.date.map { "\(c.label) (\($0))" } ?? c.label } ?? L("Bilinmiyor"))
         }
     }
 
     private var statsCard: some View {
-        DetailCard(title: "İstatistiklerin", icon: "chart.bar.fill") {
-            InfoRow("Toplam süre", (stats?.totalSeconds ?? 0) > 0 ? Format.duration(stats!.totalSeconds) : "Henüz oynanmadı")
-            InfoRow("Oturum", "\(stats?.sessions ?? 0)")
-            InfoRow("İlk oynama", stats?.firstPlayed.map(fullDate) ?? "—")
-            InfoRow("Son oynama", stats?.lastPlayed.map { Format.relative($0) } ?? "—")
+        DetailCard(title: L("İstatistiklerin"), icon: "chart.bar.fill") {
+            InfoRow(L("Toplam süre"), (stats?.totalSeconds ?? 0) > 0 ? Format.duration(stats!.totalSeconds) : L("Henüz oynanmadı"))
+            InfoRow(L("Oturum"), "\(stats?.sessions ?? 0)")
+            InfoRow(L("İlk oynama"), stats?.firstPlayed.map(fullDate) ?? "—")
+            InfoRow(L("Son oynama"), stats?.lastPlayed.map { Format.relative($0) } ?? "—")
         }
     }
 
@@ -423,17 +423,17 @@ struct GameDetailView: View {
                     trophyHeader
                     let trophies = details?.trophies ?? []
                     if trophies.isEmpty {
-                        Text("Bu oyunun kupa bilgisi bulunamadı.").foregroundStyle(.white.opacity(0.5)).padding(.bottom, 10)
+                        Text(L("Bu oyunun kupa bilgisi bulunamadı.")).foregroundStyle(.white.opacity(0.5)).padding(.bottom, 10)
                     }
                     ForEach(Array(trophies.enumerated()), id: \.element.id) { i, t in
                         TrophyRow(trophy: t, focused: focus == GameDetailView.actionCount + i, accent: accent)
                             .id("t\(t.id)")
                     }
 
-                    Text("Kayıtlar").font(.system(size: 24, weight: .bold)).padding(.top, 24)
+                    Text(L("Kayıtlar")).font(.system(size: 24, weight: .bold)).padding(.top, 24)
                     let saves = details?.saves ?? []
                     if saves.isEmpty {
-                        Text("Henüz kayıt yok. Oyunda kaydettiğinde burada görünür.").foregroundStyle(.white.opacity(0.5))
+                        Text(L("Henüz kayıt yok. Oyunda kaydettiğinde burada görünür.")).foregroundStyle(.white.opacity(0.5))
                     }
                     ForEach(Array(saves.enumerated()), id: \.element.id) { i, s in
                         SaveRow(save: s, focused: focus == GameDetailView.actionCount + trophies.count + i, accent: accent)
@@ -459,7 +459,7 @@ struct GameDetailView: View {
     private var trophyHeader: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text("Kupalar").font(.system(size: 24, weight: .bold))
+                Text(L("Kupalar")).font(.system(size: 24, weight: .bold))
                 if let d = details, !d.trophies.isEmpty {
                     Text("\(d.unlocked) / \(d.trophies.count)").font(.system(size: 20, weight: .medium)).foregroundStyle(.white.opacity(0.7))
                 }
@@ -487,7 +487,7 @@ struct GameDetailView: View {
     }
 
     private func fullDate(_ d: Date) -> String {
-        d.formatted(.dateTime.day().month(.wide).year().locale(Locale(identifier: "tr_TR")))
+        d.formatted(.dateTime.day().month(.wide).year().locale(L10n.locale))
     }
 }
 
@@ -545,8 +545,8 @@ struct TrophyRow: View {
             .opacity(trophy.unlocked ? 1 : 0.55)
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(secret ? "Gizli kupa" : trophy.name).font(.system(size: 16, weight: .semibold)).lineLimit(1)
-                Text(secret ? "Açınca ortaya çıkacak." : trophy.detail)
+                Text(secret ? L("Gizli kupa") : trophy.name).font(.system(size: 16, weight: .semibold)).lineLimit(1)
+                Text(secret ? L("Açınca ortaya çıkacak.") : trophy.detail)
                     .font(.system(size: 13)).foregroundStyle(.white.opacity(0.65)).lineLimit(2)
             }
             Spacer(minLength: 10)
@@ -557,7 +557,7 @@ struct TrophyRow: View {
                 }
                 .font(.system(size: 12, weight: .semibold))
                 if trophy.unlocked {
-                    Label(trophy.unlockedAt.map { Format.relative($0) } ?? "Kazanıldı", systemImage: "checkmark.circle.fill")
+                    Label(trophy.unlockedAt.map { Format.relative($0) } ?? L("Kazanıldı"), systemImage: "checkmark.circle.fill")
                         .font(.system(size: 12)).foregroundStyle(.green)
                 }
             }

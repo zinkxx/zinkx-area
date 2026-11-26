@@ -7,9 +7,11 @@ struct WavesView: View {
     let accent: Color
     var intensity: Double = 1
     var sparks: Bool = false
+    @ObservedObject private var activity = GameActivity.shared
 
     var body: some View {
-        TimelineView(.animation) { tl in
+        // 30 fps is plenty for these slow waves; stop entirely while a game is running.
+        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: activity.isActive)) { tl in
             let t = tl.date.timeIntervalSinceReferenceDate
             Canvas { ctx, size in
                 let ribbons = 3
@@ -180,7 +182,7 @@ struct IntroView: View {
                         Text(greeting)
                             .font(.system(size: 19, weight: .bold))
                             .foregroundStyle(.white)
-                        Text("KONTROLCÜ HAZIR  ·  PS3 SİSTEMİ AKTİF")
+                        Text(L("KONTROLCÜ HAZIR  ·  PS3 SİSTEMİ AKTİF"))
                             .font(.system(size: 11, weight: .heavy))
                             .tracking(1.6)
                             .foregroundStyle(accent.mix(with: .white, by: 0.55))
@@ -317,7 +319,7 @@ struct ScreensaverView: View {
                             Text(ctx.date, format: .dateTime.hour().minute())
                                 .font(.system(size: 130, weight: .thin))
                                 .monospacedDigit()
-                            Text(ctx.date.formatted(.dateTime.weekday(.wide).day().month(.wide).locale(Locale(identifier: "tr_TR"))))
+                            Text(ctx.date.formatted(.dateTime.weekday(.wide).day().month(.wide).locale(L10n.locale)))
                                 .font(.system(size: 28, weight: .medium))
                                 .foregroundStyle(.white.opacity(0.8))
                         }
