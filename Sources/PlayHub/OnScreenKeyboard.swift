@@ -8,14 +8,14 @@ enum ProfileFieldKind: Int, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .fullName: "Ad Soyad"
-        case .gamertag: "Kullanıcı Adı (Gamer Tag)"
-        case .displayName: "Kısa Ad (Karşılama)"
-        case .bio: "Hakkımda"
-        case .location: "Konum"
-        case .genre: "Favori Tür"
-        case .brandName: "Açılış Marka Adı"
-        case .avatar: "Avatar Simgesi"
+        case .fullName: L("Ad Soyad")
+        case .gamertag: L("Kullanıcı Adı (Gamer Tag)")
+        case .displayName: L("Kısa Ad (Karşılama)")
+        case .bio: L("Hakkımda")
+        case .location: L("Konum")
+        case .genre: L("Favori Tür")
+        case .brandName: L("Açılış Marka Adı")
+        case .avatar: L("Avatar Simgesi")
         }
     }
 
@@ -34,13 +34,13 @@ enum ProfileFieldKind: Int, CaseIterable, Identifiable {
 
     var placeholder: String {
         switch self {
-        case .fullName: "Örn: Said Kaya"
-        case .gamertag: "Örn: zinkx"
-        case .displayName: "Örn: Zinkx"
-        case .bio: "Kendini veya sevdiğin oyunları anlat…"
-        case .location: "Örn: İstanbul, Türkiye"
-        case .genre: "Seçilmedi"
-        case .brandName: "Örn: Zinkx Arena"
+        case .fullName: L("Örn: Said Kaya")
+        case .gamertag: L("Örn: zinkx")
+        case .displayName: L("Örn: Zinkx")
+        case .bio: L("Kendini veya sevdiğin oyunları anlat…")
+        case .location: L("Örn: İstanbul, Türkiye")
+        case .genre: L("Seçilmedi")
+        case .brandName: L("Örn: Zinkx Arena")
         case .avatar: ""
         }
     }
@@ -54,15 +54,20 @@ enum ProfileFieldKind: Int, CaseIterable, Identifiable {
 
     var suggestions: [String] {
         switch self {
-        case .fullName: ["Zinkx", "Oyuncu 1", "Player 1", "Temizle"]
-        case .gamertag: ["zinkx", "zinkx_ps", "pro_zinkx", "Temizle"]
-        case .displayName: ["Zinkx", "Kaptan", "Legend", "Temizle"]
-        case .bio: ["PS3 & Retro Tutkunu 🎮", "Zinkx Arena Oyuncusu ⚡", "Platin Kupa Avcısı 🏆", "Temizle"]
-        case .location: ["İstanbul, Türkiye", "Türkiye", "Ankara, Türkiye", "Temizle"]
+        case .fullName: ["Zinkx", L("Oyuncu 1"), "Player 1", L("Temizle")]
+        case .gamertag: ["zinkx", "zinkx_ps", "pro_zinkx", L("Temizle")]
+        case .displayName: ["Zinkx", L("Kaptan"), "Legend", L("Temizle")]
+        case .bio: [L("PS3 & Retro Tutkunu 🎮"), L("Zinkx Arena Oyuncusu ⚡"), L("Platin Kupa Avcısı 🏆"), L("Temizle")]
+        case .location: [L("İstanbul, Türkiye"), L("Türkiye"), L("Ankara, Türkiye"), L("Temizle")]
         case .brandName: ["Zinkx Arena", "Zinkx Station", "Zinkx Play", "Zinkx OS"]
         default: []
         }
     }
+}
+
+/// Steps of the full-screen "new player" sign-up flow.
+enum NewUserStep: Int, CaseIterable {
+    case name, gamertag, avatar, color, genre, review
 }
 
 enum KeyboardMode {
@@ -82,6 +87,12 @@ final class ProfileEditorController: ObservableObject {
     @Published var avatar: Avatar = .controller
     @Published var isCreatingNewUser = false
 
+    // New-user sign-up wizard. `showsWizard` stays set until the next load so the wizard
+    // keeps showing while it fades out after the account was created.
+    @Published private(set) var showsWizard = false
+    @Published var wizardStep: NewUserStep = .name
+    @Published var accentChoice: AccentChoice = .blue
+
     // Editor navigation: 0..<8 are fields, 8 is bottom buttons (0 = Kaydet, 1 = Vazgeç)
     @Published var rowIndex = 0
     @Published var buttonCol = 0
@@ -97,6 +108,7 @@ final class ProfileEditorController: ObservableObject {
 
     func load(from s: AppSettings) {
         isCreatingNewUser = false
+        showsWizard = false
         fullName = s.fullName
         gamertag = s.gamertag
         displayName = s.profileName
@@ -122,6 +134,10 @@ final class ProfileEditorController: ObservableObject {
         genre = ""
         brandName = s.brandName
         avatar = avatars[nextNum % avatars.count]
+        let accents: [AccentChoice] = [.teal, .orange, .pink, .green, .red, .purple, .blue]
+        accentChoice = accents[nextNum % accents.count]
+        showsWizard = true
+        wizardStep = .name
         rowIndex = 0
         buttonCol = 0
         activeField = nil
@@ -138,7 +154,7 @@ final class ProfileEditorController: ObservableObject {
 
         if isCreatingNewUser {
             let nextNum = UserAccountStore.shared.accounts.count + 1
-            let finalDisplay = !cDisp.isEmpty ? cDisp : (!cFull.isEmpty ? cFull : "Oyuncu \(nextNum)")
+            let finalDisplay = !cDisp.isEmpty ? cDisp : (!cFull.isEmpty ? cFull : L("Oyuncu \(nextNum)"))
             let finalFull = !cFull.isEmpty ? cFull : finalDisplay
             let finalTag = !cTag.isEmpty ? cTag : finalDisplay.lowercased().replacingOccurrences(of: " ", with: "")
             if !cBrand.isEmpty { s.brandName = cBrand }
@@ -150,6 +166,7 @@ final class ProfileEditorController: ObservableObject {
                 location: cLoc,
                 genre: genre,
                 avatar: avatar,
+                accent: accentChoice,
                 settings: s
             )
             isCreatingNewUser = false
@@ -174,7 +191,7 @@ final class ProfileEditorController: ObservableObject {
         case .displayName: displayName
         case .bio: bio
         case .location: location
-        case .genre: genre.isEmpty ? "Seçilmedi" : genre
+        case .genre: genre.isEmpty ? L("Seçilmedi") : L(key: genre)
         case .brandName: brandName
         case .avatar: avatar.title
         }
@@ -211,19 +228,9 @@ final class ProfileEditorController: ObservableObject {
         let numRow = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "@", "_"]
         switch kbMode {
         case .lower:
-            return [
-                numRow,
-                ["q", "w", "e", "r", "t", "y", "u", "ı", "o", "p", "ğ", "ü"],
-                ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ş", "i", ","],
-                ["z", "x", "c", "v", "b", "n", "m", "ö", "ç", ".", "-", "'"],
-            ]
+            return [numRow] + Self.letterRows(upper: false)
         case .upper:
-            return [
-                numRow,
-                ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "Ğ", "Ü"],
-                ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Ş", "İ", ","],
-                ["Z", "X", "C", "V", "B", "N", "M", "Ö", "Ç", ".", "-", "'"],
-            ]
+            return [numRow] + Self.letterRows(upper: true)
         case .symbols:
             return [
                 numRow,
@@ -234,14 +241,39 @@ final class ProfileEditorController: ObservableObject {
         }
     }
 
+    /// Letter rows (3 × 12 keys) for the active UI language; CJK languages use the English layout.
+    static func letterRows(upper: Bool) -> [[String]] {
+        if L10n.code == "tr" {
+            return upper
+                ? [["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "Ğ", "Ü"],
+                   ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Ş", "İ", ","],
+                   ["Z", "X", "C", "V", "B", "N", "M", "Ö", "Ç", ".", "-", "'"]]
+                : [["q", "w", "e", "r", "t", "y", "u", "ı", "o", "p", "ğ", "ü"],
+                   ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ş", "i", ","],
+                   ["z", "x", "c", "v", "b", "n", "m", "ö", "ç", ".", "-", "'"]]
+        }
+        let lower: [String] = switch L10n.code {
+        case "de": ["qwertzuiopüß", "asdfghjklöä,", "yxcvbnm.-'!?"]
+        case "fr": ["azertyuiopéè", "qsdfghjklmàç", "wxcvbnêù',.-"]
+        case "es": ["qwertyuiopáé", "asdfghjklñíó", "zxcvbnmúü,.-"]
+        default: ["qwertyuiop-'", "asdfghjkl,.!", "zxcvbnm?&+/#"]
+        }
+        return lower.map { row in
+            row.map { ch in
+                let s = String(ch)
+                return upper && s != "ß" ? s.uppercased(with: L10n.locale) : s
+            }
+        }
+    }
+
     var actionTitles: [(icon: String, label: String)] {
         [
-            (kbMode == .upper ? "shift.fill" : "shift", kbMode == .upper ? "BÜYÜK" : "Küçük"),
-            ("number", kbMode == .symbols ? "Harfler" : "#+="),
-            ("space", "Boşluk (△)"),
-            ("delete.left.fill", "Sil (□)"),
-            ("trash", "Temizle"),
-            ("checkmark.circle.fill", "Tamam (R1)"),
+            (kbMode == .upper ? "shift.fill" : "shift", kbMode == .upper ? L("BÜYÜK") : L("küçük")),
+            ("number", kbMode == .symbols ? L("Harfler") : "#+="),
+            ("space", L("Boşluk (△)")),
+            ("delete.left.fill", L("Sil (□)")),
+            ("trash", L("Temizle")),
+            ("checkmark.circle.fill", L("Tamam (R1)")),
         ]
     }
 
@@ -260,6 +292,7 @@ final class ProfileEditorController: ObservableObject {
         setValue(kbText, for: field)
         AudioManager.shared.play(.confirm)
         activeField = nil
+        if showsWizard { advanceWizard() }
     }
 
     func cancelKeyboard() {
@@ -275,7 +308,83 @@ final class ProfileEditorController: ObservableObject {
             handleKeyboard(action)
             return false
         }
+        if showsWizard { return handleWizard(action, settings: settings) }
         return handleForm(action, settings: settings)
+    }
+
+    // MARK: - New-user wizard
+
+    /// Returns true when the wizard should close: the account was created (`isCreatingNewUser`
+    /// is then false) or the user backed out of the first step (it stays true).
+    private func handleWizard(_ action: NavAction, settings: AppSettings) -> Bool {
+        let audio = AudioManager.shared
+        switch action {
+        case .back:
+            return goBackInWizard()
+        case .left, .right:
+            stepWizardOption(action == .left ? -1 : 1)
+        case .confirm:
+            switch wizardStep {
+            case .name: openKeyboard(for: .displayName)
+            case .gamertag: openKeyboard(for: .gamertag)
+            case .review: return createAccount(settings: settings)
+            default: advanceWizard()
+            }
+        case .r1:
+            if wizardStep == .review { return createAccount(settings: settings) }
+            advanceWizard()
+        default:
+            break
+        }
+        return false
+    }
+
+    func stepWizardOption(_ delta: Int) {
+        let audio = AudioManager.shared
+        switch wizardStep {
+        case .avatar:
+            avatar = avatar.step(delta)
+        case .color:
+            accentChoice = accentChoice.step(delta)
+        case .genre:
+            let options = [""] + AppSettings.genres
+            let idx = options.firstIndex(of: genre) ?? 0
+            genre = options[(idx + delta + options.count) % options.count]
+        default:
+            return
+        }
+        audio.play(.tick)
+    }
+
+    func advanceWizard() {
+        if wizardStep == .name {
+            let name = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+            // A name is required; ask for it instead of moving on.
+            guard !name.isEmpty else { openKeyboard(for: .displayName); return }
+            if gamertag.isEmpty { gamertag = Self.suggestedGamertag(from: name) }
+        }
+        guard let next = NewUserStep(rawValue: wizardStep.rawValue + 1) else { return }
+        AudioManager.shared.play(.tick)
+        wizardStep = next
+    }
+
+    func goBackInWizard() -> Bool {
+        AudioManager.shared.play(.back)
+        guard let prev = NewUserStep(rawValue: wizardStep.rawValue - 1) else { return true }
+        wizardStep = prev
+        return false
+    }
+
+    func createAccount(settings: AppSettings) -> Bool {
+        AudioManager.shared.play(.confirm)
+        save(to: settings)
+        return true
+    }
+
+    static func suggestedGamertag(from name: String) -> String {
+        name.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: L10n.locale)
+            .lowercased(with: L10n.locale)
+            .filter { $0.isLetter || $0.isNumber || $0 == "_" }
     }
 
     private func handleForm(_ action: NavAction, settings: AppSettings) -> Bool {
@@ -401,7 +510,7 @@ final class ProfileEditorController: ObservableObject {
             let list = f.suggestions
             guard list.indices.contains(kbCol) else { return }
             let val = list[kbCol]
-            if val == "Temizle" {
+            if val == L("Temizle") {
                 kbText = ""
                 audio.play(.back)
             } else {
@@ -498,7 +607,7 @@ struct OnScreenKeyboardView: View {
                     .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(accent.mix(with: .white, by: 0.45))
                 Spacer()
-                Text("\(editor.kbText.count) karakter")
+                Text(L("\(editor.kbText.count) karakter"))
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(.white.opacity(0.45))
             }
@@ -545,7 +654,7 @@ struct OnScreenKeyboardView: View {
             editor.pressCurrentKey()
         } label: {
             HStack(spacing: 6) {
-                Image(systemName: text == "Temizle" ? "xmark.circle" : "sparkles")
+                Image(systemName: text == L("Temizle") ? "xmark.circle" : "sparkles")
                     .font(.system(size: 13))
                 Text(text).lineLimit(1)
             }
@@ -643,12 +752,12 @@ struct OnScreenKeyboardView: View {
 
     private var shortcutsRow: some View {
         HStack(spacing: 22) {
-            Hint(symbol: "xmark.circle", text: "Seç")
-            Hint(symbol: "square.circle", text: "Sil")
-            Hint(symbol: "triangle.circle", text: "Boşluk")
-            Hint(symbol: "l1.rectangle.roundedbottom", text: "Büyük/Küçük")
-            Hint(symbol: "r1.rectangle.roundedbottom", text: "Tamam")
-            Hint(symbol: "circle.circle", text: "İptal")
+            Hint(symbol: "xmark.circle", text: L("Seç"))
+            Hint(symbol: "square.circle", text: L("Sil"))
+            Hint(symbol: "triangle.circle", text: L("Boşluk"))
+            Hint(symbol: "l1.rectangle.roundedbottom", text: L("Büyük/Küçük"))
+            Hint(symbol: "r1.rectangle.roundedbottom", text: L("Tamam"))
+            Hint(symbol: "circle.circle", text: L("İptal"))
         }
         .font(.system(size: 13, weight: .medium))
         .foregroundStyle(.white.opacity(0.75))

@@ -184,12 +184,12 @@ enum DemoShowcase {
             ]
 
             demoDetails[s.id] = GameDetails(
-                region: "Avrupa",
+                region: L("Avrupa"),
                 version: s.version,
                 updateVersion: "1.05",
                 resolutions: ["1080p", "720p"],
                 sound: ["Dolby Digital", "LPCM 7.1"],
-                parental: "Seviye 9",
+                parental: L("Seviye \(9)"),
                 systemVersion: "4.90",
                 trophies: trophies,
                 saves: saves,

@@ -35,8 +35,8 @@ enum ProfilePhoto {
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [.image]
         panel.allowsMultipleSelection = false
-        panel.prompt = "Seç"
-        panel.message = "Profil fotoğrafı seç"
+        panel.prompt = L("Seç")
+        panel.message = L("Profil fotoğrafı seç")
         guard panel.runModal() == .OK, let src = panel.url else { return }
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         if let old = settings.avatarImagePath { try? FileManager.default.removeItem(atPath: old) }
@@ -61,10 +61,10 @@ enum ProfileAction: CaseIterable {
     case edit, switchUser, photo, avatar
     var title: String {
         switch self {
-        case .edit: "Profili düzenle"
-        case .switchUser: "Kullanıcı değiştir"
-        case .photo: "Fotoğraf seç"
-        case .avatar: "Simgeyi değiştir"
+        case .edit: L("Profili düzenle")
+        case .switchUser: L("Kullanıcı değiştir")
+        case .photo: L("Fotoğraf seç")
+        case .avatar: L("Simgeyi değiştir")
         }
     }
     var icon: String {
@@ -136,7 +136,7 @@ struct ProfileView: View {
                 }
             }
 
-            Text(settings.bio.isEmpty ? "Henüz bir şey yazmadın. “Profili düzenle”ye basıp kontrolcü klavyesiyle kendini anlat." : settings.bio)
+            Text(settings.bio.isEmpty ? L("Henüz bir şey yazmadın. “Profili düzenle”ye basıp kontrolcü klavyesiyle kendini anlat.") : settings.bio)
                 .font(.system(size: 17))
                 .foregroundStyle(.white.opacity(settings.bio.isEmpty ? 0.45 : 0.85))
                 .lineLimit(4)
@@ -144,12 +144,12 @@ struct ProfileView: View {
 
             VStack(alignment: .leading, spacing: 10) {
                 if !settings.location.isEmpty { infoLine("mappin.and.ellipse", settings.location) }
-                if !settings.favoriteGenre.isEmpty { infoLine("heart.fill", "Favori tür: \(settings.favoriteGenre)") }
-                infoLine("calendar", "Üyelik: \(settings.memberSince.formatted(.dateTime.day().month(.wide).year().locale(Locale(identifier: "tr_TR"))))")
+                if !settings.favoriteGenre.isEmpty { infoLine("heart.fill", L("Favori tür: \(L(key: settings.favoriteGenre))")) }
+                infoLine("calendar", L("Üyelik: \(settings.memberSince.formatted(.dateTime.day().month(.wide).year().locale(L10n.locale)))"))
             }
 
-            let btnCols = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
-            LazyVGrid(columns: btnCols, spacing: 10) {
+            // One column so longer translations (de/fr/es) fit without truncation.
+            VStack(alignment: .leading, spacing: 10) {
                 ForEach(Array(ProfileAction.allCases.enumerated()), id: \.offset) { i, a in
                     ActionButton(title: a.title, icon: a.icon, focused: i == focusedAction, accent: accent, primary: i == 0) {
                         onAction(a)
@@ -174,20 +174,20 @@ struct ProfileView: View {
     private var statsGrid: some View {
         let cols = [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)]
         return LazyVGrid(columns: cols, spacing: 16) {
-            StatTile(icon: "clock.fill", title: "Toplam oynama", value: totalSeconds > 0 ? Format.duration(totalSeconds) : "—", accent: accent)
-            StatTile(icon: "gamecontroller.fill", title: "Kütüphane", value: "\(library.games.count) oyun", accent: accent)
-            StatTile(icon: "play.circle.fill", title: "Oynanan", value: "\(playedGames.count) oyun · \(sessions) oturum", accent: accent)
-            StatTile(icon: "trophy.fill", title: "Kupalar", value: details.totalTrophies > 0 ? "\(details.totalUnlockedTrophies) / \(details.totalTrophies)" : "—", accent: accent)
-            StatTile(icon: "star.fill", title: "Favoriler", value: "\(settings.favorites.count) oyun", accent: accent)
-            StatTile(icon: "flame.fill", title: "En çok oynanan", value: mostPlayed?.title ?? "—", accent: accent)
+            StatTile(icon: "clock.fill", title: L("Toplam oynama"), value: totalSeconds > 0 ? Format.duration(totalSeconds) : "—", accent: accent)
+            StatTile(icon: "gamecontroller.fill", title: L("Kütüphane"), value: L("\(library.games.count) oyun"), accent: accent)
+            StatTile(icon: "play.circle.fill", title: L("Oynanan"), value: L("\(playedGames.count) oyun · \(sessions) oturum"), accent: accent)
+            StatTile(icon: "trophy.fill", title: L("Kupalar"), value: details.totalTrophies > 0 ? "\(details.totalUnlockedTrophies) / \(details.totalTrophies)" : "—", accent: accent)
+            StatTile(icon: "star.fill", title: L("Favoriler"), value: L("\(settings.favorites.count) oyun"), accent: accent)
+            StatTile(icon: "flame.fill", title: L("En çok oynanan"), value: mostPlayed?.title ?? "—", accent: accent)
         }
     }
 
     private var recentSection: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("Son oynananlar").font(.system(size: 22, weight: .bold))
+            Text(L("Son oynananlar")).font(.system(size: 22, weight: .bold))
             if playedGames.isEmpty {
-                Text("Bir oyun oynadığında burada görünecek.")
+                Text(L("Bir oyun oynadığında burada görünecek."))
                     .foregroundStyle(.white.opacity(0.5))
                     .font(.system(size: 16))
             } else {
@@ -255,11 +255,11 @@ struct ProfileEditorOverlay: View {
                 HStack(spacing: 16) {
                     LogoMark(accent: accent).frame(width: 42, height: 42)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(editor.isCreatingNewUser ? "Yeni Oyuncu Profili Oluştur" : "Oyuncu Profilini Düzenle")
+                        Text(editor.isCreatingNewUser ? L("Yeni Oyuncu Profili Oluştur") : L("Oyuncu Profilini Düzenle"))
                             .font(.system(size: 30, weight: .bold))
                         Text(editor.isCreatingNewUser
-                             ? "Yeni kullanıcının bilgilerini kontrolcü klavyesiyle (✕) girip R1 ile oluşturabilirsin."
-                             : "Kontrolcüyle bir alan seçip ✕ tuşuna basarak PlayStation ekran klavyesini açabilirsin.")
+                             ? L("Yeni kullanıcının bilgilerini kontrolcü klavyesiyle (✕) girip R1 ile oluşturabilirsin.")
+                             : L("Kontrolcüyle bir alan seçip ✕ tuşuna basarak PlayStation ekran klavyesini açabilirsin."))
                             .font(.system(size: 14))
                             .foregroundStyle(.white.opacity(0.65))
                     }
@@ -297,7 +297,7 @@ struct ProfileEditorOverlay: View {
                         HStack(spacing: 16) {
                             Spacer()
                             ActionButton(
-                                title: editor.isCreatingNewUser ? "Oluştur & Giriş Yap (R1)" : "Kaydet (R1)",
+                                title: editor.isCreatingNewUser ? L("Oluştur & Giriş Yap (R1)") : L("Kaydet (R1)"),
                                 icon: "checkmark.circle.fill",
                                 focused: buttonsSelected && editor.buttonCol == 0,
                                 accent: accent,
@@ -308,7 +308,7 @@ struct ProfileEditorOverlay: View {
                                 onClose()
                             }
                             ActionButton(
-                                title: "Vazgeç (○)",
+                                title: L("Vazgeç (○)"),
                                 icon: "xmark.circle",
                                 focused: buttonsSelected && editor.buttonCol == 1,
                                 accent: accent
@@ -326,11 +326,11 @@ struct ProfileEditorOverlay: View {
                 Spacer(minLength: 0)
 
                 HintBar(items: [
-                    HintItem(symbol: "arrow.up.and.down.circle", text: "Alan Seç"),
-                    HintItem(symbol: "xmark.circle", text: "Ekran Klavyesi / Değiştir"),
-                    HintItem(symbol: "arrow.left.and.right.circle", text: "Seçenek Değiştir"),
-                    HintItem(symbol: "r1.rectangle.roundedbottom", text: "Kaydet"),
-                    HintItem(symbol: "circle.circle", text: "Vazgeç"),
+                    HintItem(symbol: "arrow.up.and.down.circle", text: L("Alan Seç")),
+                    HintItem(symbol: "xmark.circle", text: L("Ekran Klavyesi / Değiştir")),
+                    HintItem(symbol: "arrow.left.and.right.circle", text: L("Seçenek Değiştir")),
+                    HintItem(symbol: "r1.rectangle.roundedbottom", text: L("Kaydet")),
+                    HintItem(symbol: "circle.circle", text: L("Vazgeç")),
                 ])
             }
 
@@ -345,7 +345,7 @@ struct ProfileEditorOverlay: View {
 
     private var livePreviewCard: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("CANLI ÖNİZLEME")
+            Text(L("CANLI ÖNİZLEME"))
                 .font(.system(size: 11, weight: .heavy))
                 .tracking(1.6)
                 .foregroundStyle(accent.mix(with: .white, by: 0.5))
@@ -356,7 +356,7 @@ struct ProfileEditorOverlay: View {
                     .shadow(color: accent.opacity(0.6), radius: 16)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(editor.fullName.isEmpty ? (editor.displayName.isEmpty ? "Oyuncu" : editor.displayName) : editor.fullName)
+                    Text(editor.fullName.isEmpty ? (editor.displayName.isEmpty ? L("Oyuncu") : editor.displayName) : editor.fullName)
                         .font(.system(size: 26, weight: .bold))
                         .lineLimit(1)
                     if !editor.gamertag.isEmpty {
@@ -367,7 +367,7 @@ struct ProfileEditorOverlay: View {
                 }
             }
 
-            Text(editor.bio.isEmpty ? "Hakkımda yazısı burada görünecek…" : editor.bio)
+            Text(editor.bio.isEmpty ? L("Hakkımda yazısı burada görünecek…") : editor.bio)
                 .font(.system(size: 15))
                 .foregroundStyle(.white.opacity(editor.bio.isEmpty ? 0.4 : 0.85))
                 .lineLimit(3)
@@ -380,10 +380,10 @@ struct ProfileEditorOverlay: View {
                         .font(.system(size: 14, weight: .medium))
                 }
                 if !editor.genre.isEmpty {
-                    Label("Favori tür: \(editor.genre)", systemImage: "heart.fill")
+                    Label(L("Favori tür: \(L(key: editor.genre))"), systemImage: "heart.fill")
                         .font(.system(size: 14, weight: .medium))
                 }
-                Label("Karşılama: Hoş geldin, \(editor.gamertag.isEmpty ? editor.displayName : editor.gamertag)", systemImage: "sparkles")
+                Label(L("Karşılama: Hoş geldin, \(editor.gamertag.isEmpty ? editor.displayName : editor.gamertag)"), systemImage: "sparkles")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(.white.opacity(0.75))
             }
@@ -391,7 +391,7 @@ struct ProfileEditorOverlay: View {
             Divider().overlay(.white.opacity(0.15))
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("AÇILIŞ MARKASI")
+                Text(L("AÇILIŞ MARKASI"))
                     .font(.system(size: 10, weight: .heavy))
                     .tracking(1.4)
                     .foregroundStyle(.white.opacity(0.45))

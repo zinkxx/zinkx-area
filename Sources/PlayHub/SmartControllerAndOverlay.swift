@@ -12,10 +12,10 @@ enum PerfResolution: Int, CaseIterable {
 
     var label: String {
         switch self {
-        case .perf540: "540p (%75 · Hızlı)"
-        case .native720: "720p (%100 · Doğal)"
-        case .hd1080: "1080p (%150 · Full HD)"
-        case .qhd1440: "1440p (%200 · 2K)"
+        case .perf540: L("540p (%75 · Hızlı)")
+        case .native720: L("720p (%100 · Doğal)")
+        case .hd1080: L("1080p (%150 · Full HD)")
+        case .qhd1440: L("1440p (%200 · 2K)")
         }
     }
 
@@ -34,10 +34,10 @@ enum PerfFPS: String, CaseIterable {
 
     var label: String {
         switch self {
-        case .auto: "Otomatik"
+        case .auto: L("Otomatik")
         case .fps30: "30 FPS"
         case .fps60: "60 FPS"
-        case .off: "Limitsiz"
+        case .off: L("Limitsiz")
         }
     }
 
@@ -54,8 +54,8 @@ enum PerfShader: String, CaseIterable {
 
     var label: String {
         switch self {
-        case .fastAsync: "Çok Çekirdekli (Önerilen · Async)"
-        case .legacy: "Tek Çekirdekli (Kararlı · Legacy)"
+        case .fastAsync: L("Çok Çekirdekli (Önerilen · Async)")
+        case .legacy: L("Tek Çekirdekli (Kararlı · Legacy)")
         }
     }
 
@@ -117,9 +117,16 @@ final class PerfProfileStore: ObservableObject {
         guard var yml = try? String(contentsOf: baseConfig, encoding: .utf8) else { return nil }
 
         let validShader = PerfShader(rawValue: p.shaderMode)?.rawValue ?? PerfShader.fastAsync.rawValue
-        // 6-SPU open-world streaming engine titles requiring Accurate XFloat and Write Color Buffers
-        let accurateSPUTitles: Set<String> = ["BLES01128", "BLES00229", "BLUS30127", "BLUS30418", "NPUB30702", "NPEB00882"]
-        let needsAccurateSPU = accurateSPUTitles.contains(titleID.uppercased())
+        // GTA IV family (RAGE engine, heavy SPU streaming).
+        // - Write Color Buffers stays on, as before.
+        // - Relaxed ZCULL Sync must stay off: with it the boot stage never advances (black screen).
+        //   Known issue without it: an occasional freeze on Apple M1 with the PPU stuck in
+        //   ZCULL_control::on_access_violation -> rsx::thread::pause (PPU/RSX deadlock).
+        // - Accurate XFloat and Driver Wake-Up Delay 100 are kept as before (verified working).
+        //   The game is SPU-bound on Apple M1 (overlay: SPU ~64%, RSX ~14%); Approximate XFloat
+        //   is the main untested lever for more speed.
+        let gta4Titles: Set<String> = ["BLES01128", "BLES00229", "BLUS30127", "BLUS30418", "NPUB30702", "NPEB00882"]
+        let isGTA4 = gta4Titles.contains(titleID.uppercased())
 
         yml = replaceYAML(yml, key: "Resolution Scale", value: "\(p.resolutionScale)")
         yml = replaceYAML(yml, key: "Frame limit", value: p.frameLimit)
@@ -127,15 +134,20 @@ final class PerfProfileStore: ObservableObject {
         yml = replaceYAML(yml, key: "VSync Mode", value: "Adaptive")
         yml = replaceYAML(yml, key: "Start games in fullscreen mode", value: AppSettings.shared.fullscreenGames ? "true" : "false")
 
-        yml = replaceYAML(yml, key: "SPU XFloat Accuracy", value: needsAccurateSPU ? "Accurate" : "Approximate")
+        yml = replaceYAML(yml, key: "SPU XFloat Accuracy", value: isGTA4 ? "Accurate" : "Approximate")
         yml = replaceYAML(yml, key: "SPU loop detection", value: "false")
         yml = replaceYAML(yml, key: "SPU Block Size", value: "Safe")
         yml = replaceYAML(yml, key: "Preferred SPU Threads", value: "0")
         yml = replaceYAML(yml, key: "Max SPURS Threads", value: "6")
         yml = replaceYAML(yml, key: "Max LLVM Compile Threads", value: "0")
         yml = replaceYAML(yml, key: "Shader Compiler Threads", value: "0")
-        yml = replaceYAML(yml, key: "Driver Wake-Up Delay", value: needsAccurateSPU ? "100" : "0")
+        yml = replaceYAML(yml, key: "Driver Wake-Up Delay", value: isGTA4 ? "100" : "0")
         yml = replaceYAML(yml, key: "MSAA", value: "Auto")
+        // Image quality on high-DPI Macs: the 720p frame is upscaled to the Retina panel with FSR
+        // instead of a blurry bilinear stretch, and 16x anisotropic filtering keeps roads and
+        // distant textures sharp. Both are cheap on the GPU (games here are CPU/SPU-bound).
+        yml = replaceYAML(yml, key: "Output Scaling Mode", value: "FidelityFX Super Resolution")
+        yml = replaceYAML(yml, key: "Anisotropic Filter Override", value: "16")
         yml = replaceYAML(yml, key: "Shader Precision", value: "High")
         yml = replaceYAML(yml, key: "Multithreaded RSX", value: "false")
         yml = replaceYAML(yml, key: "Accurate ZCULL stats", value: "false")
@@ -144,10 +156,10 @@ final class PerfProfileStore: ObservableObject {
         yml = replaceYAML(yml, key: "Sleep Timers Accuracy", value: "As Host")
         yml = replaceYAML(yml, key: "Enable Time Stretching", value: "true")
         yml = replaceYAML(yml, key: "Time Stretching Threshold", value: "75")
-        yml = replaceYAML(yml, key: "Desired Audio Buffer Duration", value: "150")
+        yml = replaceYAML(yml, key: "Desired Audio Buffer Duration", value: isGTA4 ? "200" : "150")
         yml = replaceYAML(yml, key: "Convert to 16 bit", value: "false")
 
-        yml = replaceYAML(yml, key: "Write Color Buffers", value: needsAccurateSPU ? "true" : "false")
+        yml = replaceYAML(yml, key: "Write Color Buffers", value: isGTA4 ? "true" : "false")
 
         // Diagnostics: RPCS3 does not log FPS, so show its on-screen performance overlay (FPS, frame time, CPU per PPU/SPU/RSX).
         // Display-only; does not affect emulation.
@@ -178,10 +190,10 @@ enum LightbarEffect: String, CaseIterable {
     case ambilight, theme, siren, gold
     var title: String {
         switch self {
-        case .ambilight: "Oyun Rengi (Ambilight)"
-        case .theme: "Tema Rengi"
-        case .siren: "Polis Sireni (NFS)"
-        case .gold: "Altın Kupa"
+        case .ambilight: L("Oyun Rengi (Ambilight)")
+        case .theme: L("Tema Rengi")
+        case .siren: L("Polis Sireni (NFS)")
+        case .gold: L("Altın Kupa")
         }
     }
 }
@@ -293,7 +305,7 @@ final class SmartDS4Manager: ObservableObject {
             warnedLowBattery = true
             ToastCenter.shared.show(
                 icon: "battery.25",
-                title: "🪫 Kontrolcü Pili Azaldı (%\(Int(bat * 100)))",
+                title: L("🪫 Kontrolcü Pili Azaldı (\(Format.percent(Double(bat))))"),
                 subtitle: c.vendorName ?? "DualShock 4",
                 tint: .red
             )
@@ -342,23 +354,23 @@ enum OverlayAction: Int, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .resume: "Oyuna Devam Et"
-        case .savestate: "Hızlı Kayıt Al (Save State)"
-        case .screenshot: "Ekran Görüntüsü Al"
-        case .switchScreen: "Ekranı Değiştir (Monitör)"
-        case .lightbar: "Kol Işığı (Ambilight)"
-        case .quit: "Ana Menüye Dön (Oyunu Kapat)"
+        case .resume: L("Oyuna Devam Et")
+        case .savestate: L("Hızlı Kayıt Al (Save State)")
+        case .screenshot: L("Ekran Görüntüsü Al")
+        case .switchScreen: L("Ekranı Değiştir (Monitör)")
+        case .lightbar: L("Kol Işığı (Ambilight)")
+        case .quit: L("Ana Menüye Dön (Oyunu Kapat)")
         }
     }
 
     var subtitle: String {
         switch self {
-        case .resume: "Menüyü gizle ve oyuna dön"
-        case .savestate: "RPCS3 anlık durum kaydı oluştur"
-        case .screenshot: "~/Pictures/Zinkx Arena klasörüne kaydet"
-        case .switchScreen: "Aktif: \(AppSettings.shared.targetScreenTitle)"
+        case .resume: L("Menüyü gizle ve oyuna dön")
+        case .savestate: L("RPCS3 anlık durum kaydı oluştur")
+        case .screenshot: L("~/Pictures/Zinkx Arena klasörüne kaydet")
+        case .switchScreen: L("Aktif: \(AppSettings.shared.targetScreenTitle)")
         case .lightbar: SmartDS4Manager.shared.effect.title
-        case .quit: "Oyunu güvenli şekilde sonlandır"
+        case .quit: L("Oyunu güvenli şekilde sonlandır")
         }
     }
 
@@ -465,10 +477,10 @@ final class InGameOverlayManager: ObservableObject {
             if let screen = (AppSettings.shared.targetScreen ?? NSScreen.main)?.frame {
                 panel?.setFrame(screen, display: true)
             }
-            statusBanner = "🖥️ Ekran: \(AppSettings.shared.targetScreenShortName)"
+            statusBanner = L("🖥️ Ekran: \(AppSettings.shared.targetScreenShortName)")
         case .lightbar:
             SmartDS4Manager.shared.cycleEffect()
-            statusBanner = "Kol ışığı: \(SmartDS4Manager.shared.effect.title)"
+            statusBanner = L("Kol ışığı: \(SmartDS4Manager.shared.effect.title)")
         case .quit:
             hide(refocusGame: false)
             launcher?.stop()
@@ -489,14 +501,14 @@ final class InGameOverlayManager: ObservableObject {
             }
             ToastCenter.shared.show(
                 icon: "bolt.horizontal.circle.fill",
-                title: "Hızlı Kayıt (Save State) Gönderildi",
-                subtitle: "RPCS3 anlık durum kaydı"
+                title: L("Hızlı Kayıt (Save State) Gönderildi"),
+                subtitle: L("RPCS3 anlık durum kaydı")
             )
         }
     }
 
     private func captureInGameScreenshot() {
-        let gameTitle = launcher?.running?.title ?? "Oyun"
+        let gameTitle = launcher?.running?.title ?? L("Oyun")
         let gameID = launcher?.running?.titleID ?? "PS3"
         panel?.orderOut(nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
@@ -518,7 +530,7 @@ final class InGameOverlayManager: ObservableObject {
             try? FileManager.default.copyItem(at: file, to: mediaDir.appendingPathComponent("slide_user_\(stamp).jpg"))
 
             self?.panel?.orderFrontRegardless()
-            self?.statusBanner = "📸 Ekran görüntüsü kaydedildi!"
+            self?.statusBanner = L("📸 Ekran görüntüsü kaydedildi!")
         }
     }
 }
@@ -543,7 +555,7 @@ struct InGameOverlayView: View {
                             .font(.system(size: 13, weight: .heavy))
                             .tracking(1.8)
                             .foregroundStyle(accent.mix(with: .white, by: 0.5))
-                        Text(game?.title ?? "Oyun İçi Hızlı Menü")
+                        Text(game?.title ?? L("Oyun İçi Hızlı Menü"))
                             .font(.system(size: 22, weight: .bold))
                             .foregroundStyle(.white)
                             .lineLimit(1)
@@ -553,9 +565,9 @@ struct InGameOverlayView: View {
 
                 // Live System & Performance Telemetry Bar
                 HStack(spacing: 12) {
-                    telemetryPill(icon: "timer", label: "Oturum", value: manager.launcher?.elapsedText ?? "0 dk")
-                    telemetryPill(icon: "cpu", label: "M1 Bellek", value: Self.ramUsageText())
-                    telemetryPill(icon: "laptopcomputer", label: "Mac Pil", value: Self.macBatteryText())
+                    telemetryPill(icon: "timer", label: L("Oturum"), value: manager.launcher?.elapsedText ?? L("0 dk"))
+                    telemetryPill(icon: "cpu", label: L("M1 Bellek"), value: Self.ramUsageText())
+                    telemetryPill(icon: "laptopcomputer", label: L("Mac Pil"), value: Self.macBatteryText())
                 }
 
                 Divider().overlay(.white.opacity(0.16))
@@ -613,7 +625,7 @@ struct InGameOverlayView: View {
 
                 Spacer()
 
-                Text("▲▼ Seç   ✕ Onayla   ○ Oyuna Dön")
+                Text(L("▲▼ Seç   ✕ Onayla   ○ Oyuna Dön"))
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.65))
             }
@@ -671,6 +683,6 @@ struct InGameOverlayView: View {
         if let m = out.range(of: #"\d+%"#, options: .regularExpression) {
             return String(out[m])
         }
-        return "AC Güç"
+        return L("AC Güç")
     }
 }

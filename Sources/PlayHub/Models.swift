@@ -74,15 +74,20 @@ final class ImageCache {
 enum Format {
     static func relative(_ date: Date) -> String {
         let f = RelativeDateTimeFormatter()
-        f.locale = Locale(identifier: "tr_TR")
+        f.locale = L10n.locale
         f.unitsStyle = .full
         return f.localizedString(for: date, relativeTo: Date())
+    }
+
+    /// 0.75 → "%75" (tr), "75%" (en), "75 %" (de/fr) …
+    static func percent(_ fraction: Double) -> String {
+        fraction.formatted(.percent.precision(.fractionLength(0)).locale(L10n.locale))
     }
 
     static func duration(_ seconds: Double) -> String {
         let total = Int(seconds) / 60
         let h = total / 60, m = total % 60
-        if h > 0 { return "\(h) sa \(m) dk" }
-        return "\(max(m, 1)) dk"
+        if h > 0 { return L("\(h) sa \(m) dk") }
+        return L("\(max(m, 1)) dk")
     }
 }

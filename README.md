@@ -23,7 +23,7 @@
 
 https://github.com/user-attachments/assets/23d4c077-5aa3-41d9-a690-d7ef1bdaa6a5
 
-> 🌐 Arayüz şu an Türkçe; **İngilizce dil desteği yolda.** · *The UI is currently in Turkish; **English localization is on the way.***
+> 🌐 Arayüz dilleri: **Türkçe, English, Deutsch, Français, Español, 日本語, 简体中文, 한국어** — varsayılan olarak sistem dili kullanılır, **Ayarlar → Görünüm → Dil** ile anında değiştirilebilir. · *UI languages: Turkish, English, German, French, Spanish, Japanese, Simplified Chinese and Korean — follows the system language by default and can be switched instantly in **Settings → Appearance → Language**.*
 
 ---
 

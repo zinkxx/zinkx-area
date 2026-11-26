@@ -35,91 +35,93 @@ struct SettingsBuilder {
         let s = settings
 
         // Ses
-        r.append(toggle("introEnabled", "Ses", "sparkles", "Açılış animasyonu", nil, \.introEnabled))
-        r.append(choice("introSound", "Ses", "music.note", "Açılış sesi",
+        r.append(toggle("introEnabled", L("Ses"), "sparkles", L("Açılış animasyonu"), nil, \.introEnabled))
+        r.append(choice("introSound", L("Ses"), "music.note", L("Açılış sesi"),
                         s.introSound == .custom
-                            ? (audio.customIntroURL == nil ? "Dosya yok: ~/Music/PlayHub/acilis.mp3" : "~/Music/PlayHub/acilis dosyası")
-                            : "◀ ▶ ile değiştirince önizleme çalar",
+                            ? (audio.customIntroURL == nil ? L("Dosya yok: ~/Music/PlayHub/acilis.mp3") : L("~/Music/PlayHub/acilis dosyası"))
+                            : L("◀ ▶ ile değiştirince önizleme çalar"),
                         \.introSound) { audio.playIntro($0) })
-        r.append(SettingRow(id: "introPreview", section: "Ses", icon: "play.circle", title: "Açılış sesini dinle",
+        r.append(SettingRow(id: "introPreview", section: L("Ses"), icon: "play.circle", title: L("Açılış sesini dinle"),
                             display: .action(nil), confirm: { audio.playIntro() }))
-        r.append(choice("uiSounds", "Ses", "speaker.wave.2", "Menü sesleri", nil, \.uiSounds) { _ in audio.play(.tick) })
-        r.append(slider("effectsVolume", "Ses", "speaker.wave.3", "Efekt ses seviyesi", \.effectsVolume) { audio.play(.tick) })
-        r.append(toggle("gameMusic", "Ses", "opticaldisc.fill", "Seçili oyunun disk müziği (SND0.AT3)",
-                        "Oyunun üzerine gelince CD içindeki orijinal müziği çalar",
+        r.append(choice("uiSounds", L("Ses"), "speaker.wave.2", L("Menü sesleri"), nil, \.uiSounds) { _ in audio.play(.tick) })
+        r.append(slider("effectsVolume", L("Ses"), "speaker.wave.3", L("Efekt ses seviyesi"), \.effectsVolume) { audio.play(.tick) })
+        r.append(toggle("gameMusic", L("Ses"), "opticaldisc.fill", L("Seçili oyunun disk müziği (SND0.AT3)"),
+                        L("Oyunun üzerine gelince CD içindeki orijinal müziği çalar"),
                         \.gameMusicEnabled) { audio.refreshMusic() })
         let tracks = audio.musicTrackCount
-        r.append(toggle("musicEnabled", "Ses", "music.note.list", "Genel arka plan müziği",
-                        tracks == 0 ? "Müzik klasörüne şarkı ekle (mp3, m4a…)" : "\(tracks) şarkı · oyun müziği yoksa çalar",
+        r.append(toggle("musicEnabled", L("Ses"), "music.note.list", L("Genel arka plan müziği"),
+                        tracks == 0 ? L("Müzik klasörüne şarkı ekle (mp3, m4a…)") : L("\(tracks) şarkı · oyun müziği yoksa çalar"),
                         \.musicEnabled) { audio.refreshMusic() })
-        r.append(slider("musicVolume", "Ses", "dial.medium", "Müzik ses seviyesi", \.musicVolume) { audio.refreshMusic() })
-        r.append(SettingRow(id: "musicFolder", section: "Ses", icon: "folder", title: "Müzik klasörünü aç",
-                            subtitle: "~/Music/PlayHub — açılış sesi ve şarkılar burada",
+        r.append(slider("musicVolume", L("Ses"), "dial.medium", L("Müzik ses seviyesi"), \.musicVolume) { audio.refreshMusic() })
+        r.append(SettingRow(id: "musicFolder", section: L("Ses"), icon: "folder", title: L("Müzik klasörünü aç"),
+                            subtitle: L("~/Music/PlayHub — açılış sesi ve şarkılar burada"),
                             display: .action(nil), confirm: {
                                 NSWorkspace.shared.open(AudioManager.folder)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { audio.reloadMusic() }
                             }))
 
         // Görünüm
+        r.append(choice("language", L("Görünüm"), "globe", L10n.code == "en" ? "Language" : L("Dil") + " · Language",
+                        nil, \.language))
         r.append(SettingRow(
             id: "targetScreen",
-            section: "Görünüm",
+            section: L("Görünüm"),
             icon: "display.2",
-            title: "Aktif ekran (Monitör)",
+            title: L("Aktif ekran (Monitör)"),
             subtitle: NSScreen.screens.count > 1
-                ? "◀ ▶ veya ✕ ile menüyü ve oyunları diğer ekrana taşı (Kısayol: ⌘E)"
-                : "Tek ekran bağlı",
+                ? L("◀ ▶ veya ✕ ile menüyü ve oyunları diğer ekrana taşı (Kısayol: ⌘E)")
+                : L("Tek ekran bağlı"),
             display: .choice(s.targetScreenTitle),
             left: { s.cycleScreen(-1); audio.play(.tick) },
             right: { s.cycleScreen(1); audio.play(.tick) },
             confirm: { s.cycleScreen(1); audio.play(.confirm) }
         ))
-        r.append(choice("background", "Görünüm", "photo", "Arka plan", nil, \.background))
-        r.append(choice("gameMediaDisplay", "Görünüm", "film.stack", "Oyun disk medyası (CD içeriği)",
-                        "Seçili oyunun içindeki video ve fotoğrafları arka planda döndürür", \.gameMediaDisplay))
-        r.append(choice("accent", "Görünüm", "paintpalette", "Vurgu rengi", nil, \.accent))
-        r.append(choice("cardSize", "Görünüm", "rectangle.grid.1x2", "Kart boyutu", nil, \.cardSize))
-        r.append(choice("sortOrder", "Görünüm", "arrow.up.arrow.down", "Sıralama", nil, \.sortOrder) { _ in library.resort() })
-        r.append(toggle("showHints", "Görünüm", "questionmark.circle", "Tuş ipuçlarını göster", nil, \.showHints))
-        r.append(choice("screensaver", "Görünüm", "moon.zzz", "Ekran koruyucu", "Bu süre boyunca dokunulmazsa açılır", \.screensaver))
+        r.append(choice("background", L("Görünüm"), "photo", L("Arka plan"), nil, \.background))
+        r.append(choice("gameMediaDisplay", L("Görünüm"), "film.stack", L("Oyun disk medyası (CD içeriği)"),
+                        L("Seçili oyunun içindeki video ve fotoğrafları arka planda döndürür"), \.gameMediaDisplay))
+        r.append(choice("accent", L("Görünüm"), "paintpalette", L("Vurgu rengi"), nil, \.accent))
+        r.append(choice("cardSize", L("Görünüm"), "rectangle.grid.1x2", L("Kart boyutu"), nil, \.cardSize))
+        r.append(choice("sortOrder", L("Görünüm"), "arrow.up.arrow.down", L("Sıralama"), nil, \.sortOrder) { _ in library.resort() })
+        r.append(toggle("showHints", L("Görünüm"), "questionmark.circle", L("Tuş ipuçlarını göster"), nil, \.showHints))
+        r.append(choice("screensaver", L("Görünüm"), "moon.zzz", L("Ekran koruyucu"), L("Bu süre boyunca dokunulmazsa açılır"), \.screensaver))
 
         // Profil
-        r.append(SettingRow(id: "editProfile", section: "Profil", icon: "person.text.rectangle", title: "Profili düzenle",
-                            subtitle: "İsim, kullanıcı adı, hakkımda, konum, marka adı", display: .action(s.greetingName),
+        r.append(SettingRow(id: "editProfile", section: L("Profil"), icon: "person.text.rectangle", title: L("Profili düzenle"),
+                            subtitle: L("İsim, kullanıcı adı, hakkımda, konum, marka adı"), display: .action(s.greetingName),
                             confirm: { onEditProfile() }))
-        r.append(SettingRow(id: "photo", section: "Profil", icon: "photo", title: "Profil fotoğrafı",
-                            display: .action(s.avatarImagePath == nil ? "Seç" : "Değiştir"),
+        r.append(SettingRow(id: "photo", section: L("Profil"), icon: "photo", title: L("Profil fotoğrafı"),
+                            display: .action(s.avatarImagePath == nil ? L("Seç") : L("Değiştir")),
                             confirm: { ProfilePhoto.pick(into: s) }))
         if s.avatarImagePath != nil {
-            r.append(SettingRow(id: "removePhoto", section: "Profil", icon: "trash", title: "Fotoğrafı kaldır",
+            r.append(SettingRow(id: "removePhoto", section: L("Profil"), icon: "trash", title: L("Fotoğrafı kaldır"),
                                 display: .action(nil), confirm: { ProfilePhoto.remove(from: s) }))
         }
-        r.append(choice("avatar", "Profil", s.avatar.symbol, "Avatar simgesi", "Fotoğraf yoksa kullanılır", \.avatar))
+        r.append(choice("avatar", L("Profil"), s.avatar.symbol, L("Avatar simgesi"), L("Fotoğraf yoksa kullanılır"), \.avatar))
 
         // Oyunlar
-        r.append(toggle("fullscreen", "Oyunlar", "arrow.up.left.and.arrow.down.right", "Oyunları tam ekran başlat", nil, \.fullscreenGames))
-        r.append(toggle("combo", "Oyunlar", "hand.raised", "Share + Options ile oyunu kapat",
-                        "Oyundayken 1,5 sn basılı tut", \.closeComboEnabled))
+        r.append(toggle("fullscreen", L("Oyunlar"), "arrow.up.left.and.arrow.down.right", L("Oyunları tam ekran başlat"), nil, \.fullscreenGames))
+        r.append(toggle("combo", L("Oyunlar"), "hand.raised", L("Share + Options ile oyunu kapat"),
+                        L("Oyundayken 1,5 sn basılı tut"), \.closeComboEnabled))
         let folders = GameLibrary.roots.map { $0.path.replacingOccurrences(of: NSHomeDirectory(), with: "~") }
-        r.append(SettingRow(id: "folders", section: "Oyunlar", icon: "externaldrive", title: "Oyun klasörleri",
-                            subtitle: folders.joined(separator: "  ·  "), display: .info("\(library.games.count) oyun")))
-        r.append(SettingRow(id: "addFolder", section: "Oyunlar", icon: "folder.badge.plus", title: "Oyun klasörü ekle",
-                            subtitle: "İçinde oyun klasörleri olan bir klasör seç", display: .action(nil),
+        r.append(SettingRow(id: "folders", section: L("Oyunlar"), icon: "externaldrive", title: L("Oyun klasörleri"),
+                            subtitle: folders.joined(separator: "  ·  "), display: .info(L("\(library.games.count) oyun"))))
+        r.append(SettingRow(id: "addFolder", section: L("Oyunlar"), icon: "folder.badge.plus", title: L("Oyun klasörü ekle"),
+                            subtitle: L("İçinde oyun klasörleri olan bir klasör seç"), display: .action(nil),
                             confirm: { addFolder() }))
         if !s.extraFolders.isEmpty {
-            r.append(SettingRow(id: "clearFolders", section: "Oyunlar", icon: "folder.badge.minus",
-                                title: "Eklenen klasörleri kaldır", display: .action("\(s.extraFolders.count)"),
+            r.append(SettingRow(id: "clearFolders", section: L("Oyunlar"), icon: "folder.badge.minus",
+                                title: L("Eklenen klasörleri kaldır"), display: .action("\(s.extraFolders.count)"),
                                 confirm: { s.extraFolders = []; library.scan() }))
         }
 
         // Sistem
-        r.append(SettingRow(id: "login", section: "Sistem", icon: "power.circle", title: "Mac açılınca PlayHub'ı başlat",
+        r.append(SettingRow(id: "login", section: L("Sistem"), icon: "power.circle", title: L("Mac açılınca Zinkx Arena'yı başlat"),
                             display: .toggle(s.launchAtLogin),
                             left: { toggleLogin() }, right: { toggleLogin() }, confirm: { toggleLogin() }))
-        r.append(SettingRow(id: "rescan", section: "Sistem", icon: "arrow.clockwise", title: "Kütüphaneyi yenile",
+        r.append(SettingRow(id: "rescan", section: L("Sistem"), icon: "arrow.clockwise", title: L("Kütüphaneyi yenile"),
                             display: .action(nil), confirm: { library.scan() }))
-        r.append(SettingRow(id: "about", section: "Sistem", icon: "info.circle", title: "Hakkında",
-                            subtitle: "RPCS3 ile çalışan PS5 tarzı oyun menüsü", display: .info("\(s.brandName) 2.0")))
+        r.append(SettingRow(id: "about", section: L("Sistem"), icon: "info.circle", title: L("Hakkında"),
+                            subtitle: L("RPCS3 ile çalışan PS5 tarzı oyun menüsü"), display: .info("\(s.brandName) 2.0")))
         return r
     }
 
@@ -155,10 +157,10 @@ struct SettingsBuilder {
 
     private func promptName() {
         let alert = NSAlert()
-        alert.messageText = "Profil adı"
-        alert.informativeText = "Açılışta ve üst çubukta görünecek isim."
-        alert.addButton(withTitle: "Kaydet")
-        alert.addButton(withTitle: "Vazgeç")
+        alert.messageText = L("Profil adı")
+        alert.informativeText = L("Açılışta ve üst çubukta görünecek isim.")
+        alert.addButton(withTitle: L("Kaydet"))
+        alert.addButton(withTitle: L("Vazgeç"))
         let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 280, height: 24))
         field.stringValue = settings.profileName
         alert.accessoryView = field
@@ -174,8 +176,8 @@ struct SettingsBuilder {
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
-        panel.prompt = "Ekle"
-        panel.message = "İçinde PS3 oyun klasörleri olan klasörü seç"
+        panel.prompt = L("Ekle")
+        panel.message = L("İçinde PS3 oyun klasörleri olan klasörü seç")
         if panel.runModal() == .OK, let url = panel.url, !settings.extraFolders.contains(url.path) {
             settings.extraFolders.append(url.path)
             library.scan()
@@ -184,7 +186,7 @@ struct SettingsBuilder {
 
     private func toggleLogin() {
         do { try settings.setLaunchAtLogin(!settings.launchAtLogin) } catch {
-            launcher.errorMessage = "Otomatik başlatma ayarlanamadı: \(error.localizedDescription)"
+            launcher.errorMessage = L("Otomatik başlatma ayarlanamadı: \(error.localizedDescription)")
         }
     }
 }
@@ -298,7 +300,7 @@ struct SettingRowView: View {
                     Capsule().fill(.white.opacity(0.2)).frame(width: 200, height: 8)
                     Capsule().fill(selected ? .white : accent).frame(width: max(8, 200 * v), height: 8)
                 }
-                Text("%\(Int((v * 100).rounded()))").font(.system(size: 16, weight: .medium)).monospacedDigit().frame(width: 50, alignment: .trailing)
+                Text(Format.percent(v)).font(.system(size: 16, weight: .medium)).monospacedDigit().frame(width: 50, alignment: .trailing)
             }
         case .action(let value):
             HStack(spacing: 8) {

@@ -15,6 +15,13 @@ UNIVERSAL=1 ./build.sh                      # Apple Silicon + Intel
 ```
 Requirements: macOS 15+, Xcode Command Line Tools (Swift 6 toolchain, Swift 5 language mode). No external dependencies.
 
+## Translations / Çeviriler
+UI text is written in Turkish inside `L("...")` calls; the Turkish text is the lookup key. Translations live in `Resources/<lang>.lproj/Localizable.strings`. After adding or changing UI text, add it to every language file and run:
+```bash
+python3 scripts/l10n_check.py   # reports missing, unused or broken translations
+```
+Fixes from native speakers are very welcome. / Anadili konuşanlardan gelen düzeltmeler memnuniyetle karşılanır.
+
 ## Pull requests
 1. Fork the repo and create a branch from `main`.
 2. Keep changes focused; describe what changed and how you tested it (ideally with a `--demo` screenshot for UI changes).

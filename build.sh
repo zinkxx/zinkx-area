@@ -23,6 +23,7 @@ rm -rf "$APP" build/PlayHub.app
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp .build/release/PlayHub "$APP/Contents/MacOS/PlayHub"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
+for lproj in Resources/*.lproj(N); do cp -R "$lproj" "$APP/Contents/Resources/"; done
 
 if [ ! -f build/AppIcon.icns ] || [ Sources/PlayHub/Logo.swift -nt build/AppIcon.icns ] || [ scripts/make_icon/main.swift -nt build/AppIcon.icns ]; then
   rm -rf build/AppIcon.iconset

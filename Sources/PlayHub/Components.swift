@@ -105,10 +105,10 @@ struct TopBar: View {
                 .frame(width: 34, height: 34)
                 .padding(.trailing, 6)
             HStack(spacing: 26) {
-                tabLabel("Oyunlar", .games)
-                tabLabel("Kupalar", .trophies)
-                tabLabel("Profil", .profile)
-                tabLabel("Ayarlar", .settings)
+                tabLabel(L("Oyunlar"), .games)
+                tabLabel(L("Kupalar"), .trophies)
+                tabLabel(L("Profil"), .profile)
+                tabLabel(L("Ayarlar"), .settings)
             }
             Text("L1 / R1")
                 .font(.system(size: 11, weight: .heavy))
@@ -116,7 +116,7 @@ struct TopBar: View {
             if let running {
                 HStack(spacing: 6) {
                     Circle().fill(.green).frame(width: 8, height: 8)
-                    Text("\(running.title) çalışıyor").lineLimit(1)
+                    Text(L("\(running.title) çalışıyor")).lineLimit(1)
                 }
                 .font(.system(size: 14, weight: .medium))
                 .padding(.horizontal, 12).padding(.vertical, 6)
@@ -144,7 +144,7 @@ struct TopBar: View {
             HStack(spacing: 6) {
                 Image(systemName: "trophy.fill")
                     .foregroundStyle(Color(red: 0.98, green: 0.82, blue: 0.28))
-                Text("Sv. \(trophyLevel)")
+                Text(L("Sv. \(trophyLevel)"))
                     .font(.system(size: 14, weight: .bold))
             }
             .padding(.horizontal, 11)
@@ -158,7 +158,7 @@ struct TopBar: View {
                     Text(name).lineLimit(1)
                     if let level = input.batteryLevel { BatteryIcon(level: level) }
                 } else {
-                    Text("Kol bağlı değil").foregroundStyle(.secondary)
+                    Text(L("Kol bağlı değil")).foregroundStyle(.secondary)
                 }
             }
             .font(.system(size: 15, weight: .medium))
@@ -357,7 +357,7 @@ struct LaunchingOverlay: View {
                         .shadow(color: .black.opacity(0.7), radius: 14)
                     HStack(spacing: 12) {
                         ProgressView().controlSize(.small)
-                        Text("KONSOL SİSTEMİ  ·  OYUN BAŞLATILIYOR")
+                        Text(L("KONSOL SİSTEMİ  ·  OYUN BAŞLATILIYOR"))
                             .font(.system(size: 14, weight: .heavy))
                             .tracking(2.0)
                             .foregroundStyle(.white.opacity(0.8))
@@ -385,7 +385,7 @@ struct OptionsMenu: View {
         HStack {
             Spacer()
             VStack(alignment: .leading, spacing: 6) {
-                Text("Menü").font(.system(size: 22, weight: .bold)).padding(.bottom, 12)
+                Text(L("Menü")).font(.system(size: 22, weight: .bold)).padding(.bottom, 12)
                 ForEach(items.indices, id: \.self) { i in
                     HStack(spacing: 14) {
                         Image(systemName: items[i].icon).frame(width: 24)
@@ -400,7 +400,7 @@ struct OptionsMenu: View {
                     .onTapGesture { onPick(i) }
                 }
                 Spacer()
-                Text("✕ Seç   ○ Kapat").font(.system(size: 14)).foregroundStyle(.secondary)
+                Text(L("✕ Seç   ○ Kapat")).font(.system(size: 14)).foregroundStyle(.secondary)
             }
             .padding(32)
             .frame(width: 400)
@@ -433,11 +433,11 @@ struct EmptyStateView: View {
             Spacer()
             if scanning {
                 ProgressView()
-                Text("Oyunlar aranıyor…").font(.system(size: 20))
+                Text(L("Oyunlar aranıyor…")).font(.system(size: 20))
             } else {
                 Image(systemName: "externaldrive.badge.questionmark").font(.system(size: 64))
-                Text("Oyun bulunamadı").font(.system(size: 30, weight: .bold))
-                Text("Kendi yedeklediğin oyun klasörlerini Ayarlar → Oyun Klasörü Ekle menüsünden veya ~/Games/PS3 dizininden ekleyebilirsin.\nHarici diskinde “PS3 Games” klasörü varsa bağladığında otomatik algılanır (ya da △ tuşuna bas).")
+                Text(L("Oyun bulunamadı")).font(.system(size: 30, weight: .bold))
+                Text(L("Kendi yedeklediğin oyun klasörlerini Ayarlar → Oyun Klasörü Ekle menüsünden veya ~/Games/PS3 dizininden ekleyebilirsin.\nHarici diskinde “PS3 Games” klasörü varsa bağladığında otomatik algılanır (ya da △ tuşuna bas)."))
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
                     .font(.system(size: 17))

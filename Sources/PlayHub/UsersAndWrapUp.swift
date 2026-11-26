@@ -37,7 +37,7 @@ final class WrapUpStore: ObservableObject {
     func last7Days() -> [(label: String, seconds: Double)] {
         let cal = Calendar.current
         let fmt = DateFormatter()
-        fmt.locale = Locale(identifier: "tr_TR")
+        fmt.locale = L10n.locale
         fmt.dateFormat = "EEE"
         return (0..<7).reversed().map { offset in
             let d = cal.date(byAdding: .day, value: -offset, to: Date()) ?? Date()
@@ -50,23 +50,23 @@ final class WrapUpStore: ObservableObject {
         let hour = Calendar.current.component(.hour, from: Date())
         let isNightOwl = hour >= 22 || hour <= 4 || totalSeconds > 0
         return [
-            GamerBadge(id: "founder", icon: "hexagon.fill", title: "Arena Kurucusu",
-                       subtitle: "Zinkx Arena konsol sistemini kurdu", unlocked: true,
+            GamerBadge(id: "founder", icon: "hexagon.fill", title: L("Arena Kurucusu"),
+                       subtitle: L("Zinkx Arena konsol sistemini kurdu"), unlocked: true,
                        color: Color(red: 0.0, green: 0.68, blue: 0.75)),
-            GamerBadge(id: "collector", icon: "opticaldisc.fill", title: "Koleksiyoncu",
-                       subtitle: "Kütüphaneye 3+ PS3 oyunu ekledi", unlocked: gamesCount >= 3,
+            GamerBadge(id: "collector", icon: "opticaldisc.fill", title: L("Koleksiyoncu"),
+                       subtitle: L("Kütüphaneye 3+ PS3 oyunu ekledi"), unlocked: gamesCount >= 3,
                        color: Color(red: 0.55, green: 0.35, blue: 0.98)),
-            GamerBadge(id: "nightowl", icon: "moon.stars.fill", title: "Gece Kuşu",
-                       subtitle: "Gece seansında konsolu açtı", unlocked: isNightOwl,
+            GamerBadge(id: "nightowl", icon: "moon.stars.fill", title: L("Gece Kuşu"),
+                       subtitle: L("Gece seansında konsolu açtı"), unlocked: isNightOwl,
                        color: Color(red: 0.95, green: 0.55, blue: 0.15)),
-            GamerBadge(id: "fav", icon: "star.fill", title: "Seçici Oyuncu",
-                       subtitle: "Favori oyun listesini oluşturdu", unlocked: favoritesCount >= 1,
+            GamerBadge(id: "fav", icon: "star.fill", title: L("Seçici Oyuncu"),
+                       subtitle: L("Favori oyun listesini oluşturdu"), unlocked: favoritesCount >= 1,
                        color: Color(red: 0.96, green: 0.78, blue: 0.2)),
-            GamerBadge(id: "trophy", icon: "trophy.fill", title: "Kupa Avcısı",
-                       subtitle: "İlk PlayStation kupasını kazandı", unlocked: unlockedTrophies >= 1,
+            GamerBadge(id: "trophy", icon: "trophy.fill", title: L("Kupa Avcısı"),
+                       subtitle: L("İlk PlayStation kupasını kazandı"), unlocked: unlockedTrophies >= 1,
                        color: Color(red: 0.9, green: 0.25, blue: 0.45)),
-            GamerBadge(id: "marathon", icon: "flame.fill", title: "Maratoncu",
-                       subtitle: "Toplam 1+ saat oyun oynadı", unlocked: totalSeconds >= 3600,
+            GamerBadge(id: "marathon", icon: "flame.fill", title: L("Maratoncu"),
+                       subtitle: L("Toplam 1+ saat oyun oynadı"), unlocked: totalSeconds >= 3600,
                        color: Color(red: 0.15, green: 0.78, blue: 0.45)),
         ]
     }
@@ -100,10 +100,10 @@ struct WrapUpSectionView: View {
             // Left: 7-Day Activity Bar Chart
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Label("Haftalık Aktivite", systemImage: "chart.bar.xaxis")
+                    Label(L("Haftalık Aktivite"), systemImage: "chart.bar.xaxis")
                         .font(.system(size: 16, weight: .bold))
                     Spacer()
-                    Text("Son 7 Gün")
+                    Text(L("Son 7 Gün"))
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(.white.opacity(0.5))
                 }
@@ -136,10 +136,10 @@ struct WrapUpSectionView: View {
             // Right: Unlockable Gamer Badges Grid
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Label("Oyuncu Rozetleri", systemImage: "medal.fill")
+                    Label(L("Oyuncu Rozetleri"), systemImage: "medal.fill")
                         .font(.system(size: 16, weight: .bold))
                     Spacer()
-                    Text("\(badges.filter(\.unlocked).count) / \(badges.count) Açıldı")
+                    Text(L("\(badges.filter(\.unlocked).count) / \(badges.count) Açıldı"))
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(accent.mix(with: .white, by: 0.45))
                 }
@@ -217,7 +217,7 @@ final class UserAccountStore: ObservableObject {
                     displayName: s.profileName,
                     fullName: s.fullName,
                     gamertag: s.gamertag,
-                    bio: s.bio.isEmpty ? "Ana Konsol Hesabı" : s.bio,
+                    bio: s.bio.isEmpty ? L("Ana Konsol Hesabı") : s.bio,
                     location: s.location,
                     favoriteGenre: s.favoriteGenre,
                     avatarRaw: s.avatar.rawValue,
@@ -226,10 +226,10 @@ final class UserAccountStore: ObservableObject {
                 ),
                 UserProfileAccount(
                     id: "guest",
-                    displayName: "Misafir",
-                    fullName: "Misafir Oyuncu",
+                    displayName: L("Misafir"),
+                    fullName: L("Misafir Oyuncu"),
                     gamertag: "player2",
-                    bio: "Hızlı Oyun & 2. Oyuncu Hesabı",
+                    bio: L("Hızlı Oyun & 2. Oyuncu Hesabı"),
                     location: "",
                     favoriteGenre: "",
                     avatarRaw: Avatar.flame.rawValue,
@@ -269,8 +269,8 @@ final class UserAccountStore: ObservableObject {
         if let ac = AccentChoice(rawValue: acc.accentRaw) { s.accent = ac }
         ToastCenter.shared.show(
             icon: "person.crop.circle.badge.checkmark",
-            title: "Hoş geldin, \(acc.displayName)",
-            subtitle: "@\(acc.gamertag) oturumu açıldı"
+            title: L("Hoş geldin, \(acc.displayName)"),
+            subtitle: L("@\(acc.gamertag) oturumu açıldı")
         )
     }
 
@@ -282,6 +282,7 @@ final class UserAccountStore: ObservableObject {
         location: String,
         genre: String,
         avatar: Avatar,
+        accent: AccentChoice? = nil,
         settings s: AppSettings
     ) {
         syncCurrentFromSettings(s)
@@ -292,11 +293,11 @@ final class UserAccountStore: ObservableObject {
             displayName: displayName,
             fullName: fullName,
             gamertag: gamertag,
-            bio: bio.isEmpty ? "Zinkx Arena Oyuncusu" : bio,
+            bio: bio.isEmpty ? L("Zinkx Arena Oyuncusu") : bio,
             location: location,
             favoriteGenre: genre,
             avatarRaw: avatar.rawValue,
-            accentRaw: accents[num % accents.count].rawValue,
+            accentRaw: (accent ?? accents[num % accents.count]).rawValue,
             rpcs3UserID: String(format: "%08d", num)
         )
         accounts.append(newAcc)
@@ -311,8 +312,8 @@ final class UserAccountStore: ObservableObject {
             AudioManager.shared.play(.back)
             ToastCenter.shared.show(
                 icon: "exclamationmark.triangle.fill",
-                title: "Son Kullanıcı Silinemez",
-                subtitle: "Konsolda en az 1 oyuncu profili bulunmalıdır"
+                title: L("Son Kullanıcı Silinemez"),
+                subtitle: L("Konsolda en az 1 oyuncu profili bulunmalıdır")
             )
             return
         }
@@ -337,8 +338,8 @@ final class UserAccountStore: ObservableObject {
         }
         ToastCenter.shared.show(
             icon: "trash.fill",
-            title: "Kullanıcı Silindi",
-            subtitle: "\(removed.displayName) (@\(removed.gamertag)) kaldırıldı"
+            title: L("Kullanıcı Silindi"),
+            subtitle: L("\(removed.displayName) (@\(removed.gamertag)) kaldırıldı")
         )
     }
 
@@ -352,6 +353,8 @@ final class UserAccountStore: ObservableObject {
 struct UserSelectOverlay: View {
     @ObservedObject var store = UserAccountStore.shared
     @EnvironmentObject var settings: AppSettings
+    /// Fully hides the home screen behind it (startup picker).
+    var opaque = false
     let onAddNewUser: () -> Void
     let onClose: () -> Void
 
@@ -359,7 +362,7 @@ struct UserSelectOverlay: View {
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.88).ignoresSafeArea()
+            Color.black.opacity(opaque ? 1 : 0.88).ignoresSafeArea()
             WavesView(accent: accent, intensity: 0.65, sparks: true).ignoresSafeArea()
 
             VStack(spacing: 38) {
@@ -367,9 +370,9 @@ struct UserSelectOverlay: View {
                     LogoMark(accent: accent)
                         .frame(width: 74, height: 74)
                         .shadow(color: accent.opacity(0.8), radius: 22)
-                    Text("Zinkx Arena'ya Hoş Geldin")
+                    Text(L("Zinkx Arena'ya Hoş Geldin"))
                         .font(.system(size: 40, weight: .bold))
-                    Text("Kim oynuyor? Kontrolcüyle profilini seç.")
+                    Text(L("Kim oynuyor? Kontrolcüyle profilini seç."))
                         .font(.system(size: 18, weight: .medium))
                         .foregroundStyle(.white.opacity(0.7))
                 }
@@ -410,7 +413,7 @@ struct UserSelectOverlay: View {
                                 }
 
                                 if store.activeID == acc.id {
-                                    Text("AKTİF")
+                                    Text(L("AKTİF"))
                                         .font(.system(size: 10, weight: .heavy))
                                         .tracking(1.4)
                                         .padding(.horizontal, 10)
@@ -424,7 +427,7 @@ struct UserSelectOverlay: View {
                                     } label: {
                                         HStack(spacing: 4) {
                                             Image(systemName: "trash.fill")
-                                            Text("Sil (□)")
+                                            Text(L("Sil (□)"))
                                         }
                                         .font(.system(size: 11, weight: .bold))
                                         .foregroundStyle(.red.mix(with: .white, by: 0.35))
@@ -473,9 +476,9 @@ struct UserSelectOverlay: View {
                             )
 
                             VStack(spacing: 4) {
-                                Text("Kullanıcı Ekle")
+                                Text(L("Kullanıcı Ekle"))
                                     .font(.system(size: 22, weight: .bold))
-                                Text("Yeni Oyuncu Profili")
+                                Text(L("Yeni Oyuncu Profili"))
                                     .font(.system(size: 13, weight: .medium))
                                     .foregroundStyle(.white.opacity(0.6))
                             }
@@ -496,7 +499,7 @@ struct UserSelectOverlay: View {
                 }
                 .animation(.spring(response: 0.26, dampingFraction: 0.8), value: store.selectedIndex)
 
-                Text("◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil   ○ Kapat")
+                Text(opaque ? L("◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil") : L("◀ ▶ Oyuncu Seç   ✕ Oturum Aç   □ Kullanıcıyı Sil   ○ Kapat"))
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.7))
                     .padding(.top, 10)
